@@ -1,0 +1,43 @@
+{
+  "frameworks_in_scope": ["FedRAMP", "FISMA", "NIST 800-53"],
+  "fedramp_baseline": "Moderate",
+  "fedramp_readiness_estimate": "Moderate",
+  "executive_summary": "Partial alignment with NIST 800-53. Key gaps: audit logging retention, external secrets.",
+  "control_mapping": [
+    {
+      "control_id": "AC-2",
+      "status": "Partial",
+      "evidence": "terraform/iam.tf",
+      "gap_description": "No MFA enforcement"
+    },
+    {
+      "control_id": "SC-7",
+      "status": "Met",
+      "evidence": "terraform/network.tf",
+      "gap_description": ""
+    }
+  ],
+  "findings": [
+    {
+      "id": "F-001",
+      "severity": "High",
+      "control_id": "IA-5",
+      "evidence": "Secrets in env vars",
+      "remediation": "Use external secrets manager"
+    }
+  ],
+  "remediation_roadmap": [
+    {
+      "phase": "Phase 1",
+      "items": ["Implement external secrets", "Add SBOM to pipeline"]
+    }
+  ],
+  "fisma_rmf_alignment": {
+    "categorize": "FIPS 199 completed",
+    "select": "Controls selected per 800-53",
+    "implement": "Partial evidence",
+    "assess": "Gap - no 800-53A assessment",
+    "authorize": "Gap - not yet authorized",
+    "monitor": "Gap - ConMon not configured"
+  }
+}

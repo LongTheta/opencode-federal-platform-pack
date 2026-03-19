@@ -1,0 +1,22 @@
+{
+  "verdict": "pass_with_warnings",
+  "timestamp": "2025-03-18T14:00:00Z",
+  "push_ready": true,
+  "checks": {
+    "tests": {"triggered": true, "status": "warn", "message": "New code without tests"},
+    "documentation": {"triggered": false, "status": "skipped", "message": ""},
+    "security": {"triggered": true, "status": "pass", "message": ""},
+    "architecture": {"triggered": false, "status": "skipped", "message": ""},
+    "changelog": {"triggered": false, "status": "skipped", "message": ""},
+    "ownership_tagging": {"triggered": false, "status": "skipped", "message": ""},
+    "evidence_strength": {"triggered": false, "status": "skipped", "message": ""}
+  },
+  "findings": [
+    {"id": "tests-001", "classification": "warn", "category": "tests", "message": "New code without tests"}
+  ],
+  "blockers": [],
+  "warnings": [
+    {"id": "tests-001", "classification": "warn", "category": "tests", "message": "New code without tests"}
+  ],
+  "informational": []
+}

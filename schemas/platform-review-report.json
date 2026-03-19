@@ -1,0 +1,177 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://opencode-federal-platform-pack/schemas/platform-review-report.json",
+  "title": "Platform Review Report",
+  "description": "DEPRECATED: Use review-score.schema.json instead. Structured output for repository, service, platform, or architecture review. Weighted category scores, findings by severity, top priorities.",
+  "x-deprecated": true,
+  "x-deprecated-since": "0.3.0",
+  "x-replace-with": "review-score.schema.json",
+  "type": "object",
+  "required": ["review_target", "summary", "category_scores", "findings"],
+  "properties": {
+    "review_target": {
+      "type": "object",
+      "required": ["name", "type", "scope"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the reviewed target (repo, service, platform)"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["repository", "service", "platform", "architecture"],
+          "description": "Type of review target"
+        },
+        "scope": {
+          "type": "string",
+          "description": "Scope or path (e.g., repo path, service name)"
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["final_score", "letter_grade", "confidence", "production_readiness"],
+      "properties": {
+        "final_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Weighted overall score 0–10"
+        },
+        "letter_grade": {
+          "type": "string",
+          "enum": ["A", "B", "C", "D", "F"],
+          "description": "Letter grade for quick assessment"
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["high", "medium", "low"],
+          "description": "Confidence in the assessment based on evidence quality"
+        },
+        "production_readiness": {
+          "type": "string",
+          "enum": ["ready", "conditionally_ready", "not_ready"],
+          "description": "ready: no critical failures. conditionally_ready: high-risk findings. not_ready: critical failures."
+        }
+      }
+    },
+    "category_scores": {
+      "type": "object",
+      "required": ["security", "reliability", "performance", "cost_awareness", "operational_excellence"],
+      "properties": {
+        "security": { "$ref": "#/definitions/categoryScore" },
+        "reliability": { "$ref": "#/definitions/categoryScore" },
+        "performance": { "$ref": "#/definitions/categoryScore" },
+        "cost_awareness": { "$ref": "#/definitions/categoryScore" },
+        "operational_excellence": { "$ref": "#/definitions/categoryScore" }
+      }
+    },
+    "findings": {
+      "type": "object",
+      "required": ["critical", "high", "medium", "low", "informational"],
+      "properties": {
+        "critical": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Must fix before production"
+        },
+        "high": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Significant gap; prioritize"
+        },
+        "medium": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Important improvement"
+        },
+        "low": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Nice to have"
+        },
+        "informational": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Observations; no action required"
+        }
+      }
+    },
+    "top_priorities": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/priority" },
+      "description": "Prioritized actions with severity and owner hint"
+    }
+  },
+  "definitions": {
+    "categoryScore": {
+      "type": "object",
+      "required": ["score", "weight", "why"],
+      "properties": {
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "0–10 for this category"
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Weight for final_score (e.g., security 0.25, ops 0.30)"
+        },
+        "why": {
+          "type": "string",
+          "description": "Brief rationale for the score"
+        },
+        "evidence_found": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "File paths, configs, manifests observed"
+        },
+        "missing_evidence": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "What could not be verified"
+        },
+        "risks": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Risks in this category"
+        },
+        "recommended_actions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Concrete actions for this category"
+        }
+      }
+    },
+    "priority": {
+      "type": "object",
+      "required": ["priority", "title", "reason", "severity"],
+      "properties": {
+        "priority": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Rank order (1 = highest)"
+        },
+        "title": {
+          "type": "string",
+          "description": "Short title for the action"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Why this matters"
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low"]
+        },
+        "owner_hint": {
+          "type": "string",
+          "description": "Suggested owner (e.g., platform-team, security)"
+        }
+      }
+    }
+  }
+}

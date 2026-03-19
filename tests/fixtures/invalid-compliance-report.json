@@ -1,0 +1,23 @@
+{
+  "frameworks_in_scope": ["FedRAMP"],
+  "fedramp_baseline": "InvalidBaseline",
+  "fedramp_readiness_estimate": "Moderate",
+  "executive_summary": "Test",
+  "control_mapping": [
+    {
+      "control_id": "AC-2",
+      "status": "InvalidStatus",
+      "evidence": "x",
+      "gap_description": ""
+    }
+  ],
+  "findings": [
+    {
+      "id": "F-001",
+      "severity": "Critical",
+      "control_id": "IA-5",
+      "evidence": "x",
+      "remediation": "x"
+    }
+  ]
+}

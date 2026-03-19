@@ -1,0 +1,83 @@
+# opencode-federal-platform-pack
+
+LLM-facing documentation for the federal platform pack. Use when an AI assistant needs to understand this pack's behavior, commands, and constraints.
+
+---
+
+## What This Pack Does
+
+Platform engineering workflow pack for OpenCode. **Federally focused** on FedRAMP, FISMA, NIST 800, **DoD Zero Trust Strategy** (7 pillars), and **DoD Enterprise DevSecOps Fundamentals v2.5**. Enforces evidence-first reviews, discovery before design, quality gates before push. Aligns to NIST SP 800-53, 800-37 (RMF), 800-207 (Zero Trust), 800-190 (Container Security), 800-171 (CUI). Not a generic coding assistant—focused on platform engineering, DevSecOps, and regulated federal environments.
+
+---
+
+## Commands
+
+| Command | Purpose |
+|--------|---------|
+| /repo-assess | Full repository assessment. Output: review-score.schema.json |
+| /solution-discovery | Discovery: requirements, constraints, assumptions |
+| /platform-design | Architecture design with tradeoffs |
+| /federal-checklist | Federal compliance; FedRAMP, FISMA, NIST 800-53; no certification claims |
+| /gitops-audit | GitOps, CI/CD, IaC maturity |
+| /quality-gate | Pre-push gate. Output: pass / pass_with_warnings / fail |
+| /doc-sync | Documentation drift; propose updates |
+| /verify | Quick verification |
+| /checkpoint | Session handoff |
+| /orchestrate | Multi-step workflow plan |
+
+---
+
+## Mandatory Rules
+
+1. **Evidence before conclusions** — Every recommendation must cite file path, config, or manifest. No claims without proof. Flag "evidence not found" explicitly.
+2. **No certification claims** — Federal outputs use "readiness," "gap," "partial" — never "compliant" or "certified."
+3. **Security blocks push** — Plaintext secrets, :latest in prod, missing security review for CI/IaC changes block push readiness.
+4. **Docs required** — Meaningful code/config/deploy changes require documentation updates.
+5. **Tagging for cloud** — Cloud resources must have environment, owner, cost center tags.
+
+---
+
+## Output Schemas
+
+- **review-score.schema.json** — Review reports: review_target, summary (final_score, letter_grade, confidence, production_readiness), categories (security 25%, reliability 20%, performance 15%, cost_awareness 10%, operational_excellence 30%), findings by severity, top_priorities.
+- **quality-gate.schema.json** — Quality gate: verdict (pass/pass_with_warnings/fail), blockers, warnings, informational.
+- **compliance-report.json** — Federal compliance: FedRAMP/FISMA/NIST 800 alignment, control mapping, gaps, evidence, remediation, RMF alignment.
+
+---
+
+## Scoring Model
+
+- Categories: Security 25%, Reliability 20%, Performance 15%, Cost Awareness 10%, Operational Excellence 30%.
+- Scale: 0–10 per category. Letter grades: A (9.0–10), B (8.0–8.9), C (7.0–7.9), D (5.5–6.9), F (<5.5).
+- Production readiness: ready (no critical), conditionally_ready (high-risk present), not_ready (critical present).
+
+---
+
+## Plugin Enforcement
+
+When the federal platform plugin is active:
+
+- **Blocked:** Reading .env files; git push if quality-gate not passed (configurable); dangerous bash (rm -rf /, etc.).
+- **Flagged:** Secrets in write/edit; supply-chain files (Dockerfile, package.json, pipelines) edited without pinning/SBOM reminder.
+- **Logged:** MCP usage for audit; quality-gate reminders before push.
+
+---
+
+## Skill Graph (Command → Skill)
+
+- /repo-assess → well-architected-review
+- /federal-checklist → federal-platform-review, nist-compliance-evaluator, aws-federal-grade-checklist
+- /gitops-audit → gitops-capability-audit, well-architected-review
+- /quality-gate, /verify → quality-gate-workflow
+- /platform-design → aws-derived-principles
+
+---
+
+## File Layout
+
+- .opencode/ — Config, commands, agents, instructions, plugins, tools (specs)
+- .opencode/plugins/governance-plugin/ — Event model, rules-map, plugin spec
+- skills/ — well-architected-review, federal-platform-review, gitops-capability-audit, nist-compliance-evaluator, aws-federal-grade-checklist, aws/azure/gcp-platform-review
+- schemas/ — review-score, quality-gate, compliance-report, command-routing
+- rules/ — evidence-before-claims, no-push-without-verification, docs-required, security-review, tagging-required
+- docs/ — architecture, usage, scoring-model, report-template, quality-gate-workflow, enforcement-model, command-routing, command-to-skill-mapping, runtime-orchestration, routing-matrix, plugin-and-hook-model, packaging-strategy, example-end-to-end-review

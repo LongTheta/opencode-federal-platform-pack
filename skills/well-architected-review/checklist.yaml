@@ -1,0 +1,102 @@
+# Well-Architected Review — Universal Checklist
+# Cloud-agnostic. Use with well-architected-review skill.
+
+version: "1.0"
+
+categories:
+  security:
+    name: "Security"
+    checks:
+      - id: SEC-01
+        description: "Least-privilege access control"
+        pass: "Roles over users; minimal permissions; no wildcards"
+      - id: SEC-02
+        description: "Secrets in external vault or managed service"
+        pass: "No plaintext in code, config, env files"
+      - id: SEC-03
+        description: "Encryption at rest and in transit"
+        pass: "TLS; key management for data at rest"
+      - id: SEC-04
+        description: "Network segmentation"
+        pass: "Deny by default; minimal public exposure"
+      - id: SEC-05
+        description: "Supply chain controls"
+        pass: "Pinned deps; SBOM where applicable; no :latest in prod"
+    fail_critical:
+      - "Secrets in code or plaintext config"
+      - "Wildcard admin access"
+      - "Public database or unrestricted SSH/RDP"
+
+  reliability:
+    name: "Reliability"
+    checks:
+      - id: REL-01
+        description: "No single point of failure"
+        pass: "Redundancy; failover; health checks"
+      - id: REL-02
+        description: "Recovery strategy defined"
+        pass: "RTO/RPO documented; backups tested"
+      - id: REL-03
+        description: "Graceful degradation"
+        pass: "Failure handling; circuit breakers or equivalent"
+    fail_critical:
+      - "No backup strategy for important data"
+      - "No recovery path documented"
+
+  performance:
+    name: "Performance"
+    checks:
+      - id: PERF-01
+        description: "Scaling strategy"
+        pass: "Elasticity; demand-based scaling; or documented limits"
+      - id: PERF-02
+        description: "Resource limits defined"
+        pass: "No unbounded growth without plan"
+    fail_high:
+      - "Scaling unclear; unbounded growth risk"
+
+  cost:
+    name: "Cost"
+    checks:
+      - id: COST-01
+        description: "Cost attribution"
+        pass: "Tagging: project, environment, owner, cost center"
+      - id: COST-02
+        description: "Right-sizing signals"
+        pass: "No obvious over-provisioning without justification"
+    fail_high:
+      - "Ownership or cost tags missing"
+
+  operations:
+    name: "Operations"
+    checks:
+      - id: OPS-01
+        description: "Observability"
+        pass: "Logs, metrics, traces; centralized; alertable"
+      - id: OPS-02
+        description: "Audit trail"
+        pass: "Who changed what, when; retention"
+      - id: OPS-03
+        description: "Documentation"
+        pass: "README, runbooks, architecture for major components"
+      - id: OPS-04
+        description: "Deployment safety"
+        pass: "CI/CD; approval gates; immutable artifacts"
+    fail_critical:
+      - "No observability"
+      - "No access control model"
+      - "No deployment safety"
+      - "No documentation for major components"
+      - "No recovery strategy"
+
+scoring:
+  compliant: [9, 10]
+  minor_gaps: [7, 8]
+  moderate_risk: [5, 6]
+  high_risk: [3, 4]
+  critical_failure: [0, 2]
+
+verdict:
+  not_ready: "Critical failures; do not deploy"
+  conditional: "High-risk findings; fix before prod or accept documented risk"
+  ready: "No critical failures; minor gaps acceptable with plan"

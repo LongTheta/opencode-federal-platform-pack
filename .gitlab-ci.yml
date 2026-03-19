@@ -1,0 +1,35 @@
+# GitLab CI for opencode-federal-platform-pack
+# Verify stage + Kaniko build
+
+stages:
+  - verify
+  - build
+
+verify:
+  stage: verify
+  image: node:20
+  timeout: 15m
+  before_script:
+    - npm ci || npm install
+  script:
+    - npm run lint
+    - npm audit --audit-level=high
+    - npm run verify
+    - npm test
+
+# Kaniko build (no Docker daemon required)
+build:
+  stage: build
+  timeout: 30m
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
+  script:
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}"
+      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}"
+  rules:
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH

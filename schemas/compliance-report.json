@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://opencode-federal-platform-pack/schemas/compliance-report.json",
+  "title": "Federal Compliance Report",
+  "description": "Schema for federal compliance review output structure. Aligns to FedRAMP, FISMA, and NIST 800 series.",
+  "type": "object",
+  "properties": {
+    "frameworks_in_scope": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Frameworks assessed: FedRAMP, FISMA, NIST 800-53, 800-37, 800-207, 800-190, 800-171, DoD Zero Trust Strategy, DoD Enterprise DevSecOps Fundamentals"
+    },
+    "fedramp_baseline": {
+      "type": "string",
+      "enum": ["Low", "Moderate", "High"],
+      "description": "FedRAMP baseline in scope"
+    },
+    "fedramp_readiness_estimate": {
+      "type": "string",
+      "enum": ["Low", "Moderate", "High"],
+      "description": "Estimated FedRAMP readiness based on control coverage"
+    },
+    "executive_summary": {
+      "type": "string",
+      "description": "Overall compliance posture and critical gaps"
+    },
+    "control_mapping": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "control_id": { "type": "string", "description": "e.g. AC-2, SC-7" },
+          "status": { "type": "string", "enum": ["Met", "Partial", "Gap"] },
+          "evidence": { "type": "string" },
+          "gap_description": { "type": "string" }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "severity": { "type": "string", "enum": ["High", "Medium", "Low"] },
+          "control_id": { "type": "string" },
+          "evidence": { "type": "string" },
+          "remediation": { "type": "string" }
+        }
+      }
+    },
+    "remediation_roadmap": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "phase": { "type": "string" },
+          "items": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "fisma_rmf_alignment": {
+      "type": "object",
+      "description": "FISMA / NIST 800-37 RMF step alignment",
+      "properties": {
+        "categorize": { "type": "string", "description": "Evidence or gap for FIPS 199 / 800-60" },
+        "select": { "type": "string", "description": "Evidence or gap for control selection" },
+        "implement": { "type": "string", "description": "Evidence or gap for implementation" },
+        "assess": { "type": "string", "description": "Evidence or gap for 800-53A assessment" },
+        "authorize": { "type": "string", "description": "Evidence or gap for authorization" },
+        "monitor": { "type": "string", "description": "Evidence or gap for continuous monitoring" }
+      }
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://opencode-federal-platform-pack/schemas/review-report.json",
+  "title": "Repository Review Report",
+  "description": "DEPRECATED: Use review-score.schema.json instead. Schema for repository review output structure.",
+  "x-deprecated": true,
+  "x-deprecated-since": "0.3.0",
+  "x-replace-with": "review-score.schema.json",
+  "type": "object",
+  "properties": {
+    "executive_summary": {
+      "type": "string",
+      "description": "2-4 sentence overview of assessment and critical findings"
+    },
+    "domains": {
+      "type": "object",
+      "properties": {
+        "architecture": { "$ref": "#/definitions/domainFindings" },
+        "maintainability": { "$ref": "#/definitions/domainFindings" },
+        "security": { "$ref": "#/definitions/domainFindings" },
+        "deployment_readiness": { "$ref": "#/definitions/domainFindings" }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/finding" }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/recommendation" }
+    }
+  },
+  "definitions": {
+    "domainFindings": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/finding" }
+    },
+    "finding": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "severity": { "type": "string", "enum": ["High", "Medium", "Low"] },
+        "evidence": { "type": "string", "description": "File path, line range, or config reference" },
+        "description": { "type": "string" }
+      }
+    },
+    "recommendation": {
+      "type": "object",
+      "properties": {
+        "priority": { "type": "integer" },
+        "action": { "type": "string" },
+        "effort": { "type": "string", "enum": ["S", "M", "L"] }
+      }
+    }
+  }
+}

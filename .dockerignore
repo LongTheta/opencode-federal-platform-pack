@@ -1,0 +1,23 @@
+# Git
+.git
+.gitignore
+
+# Dependencies (installed in container)
+node_modules/
+
+# IDE / editor
+.idea/
+.vscode/
+.cursor/
+*.swp
+*.swo
+
+# CI config (not needed in image)
+.github/
+.gitlab-ci.yml
+
+# OS / misc
+.DS_Store
+Thumbs.db
+*.log
+.cache/

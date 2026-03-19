@@ -6,7 +6,7 @@ LLM-facing documentation for the federal platform pack. Use when an AI assistant
 
 ## What This Pack Does
 
-Platform engineering workflow pack for OpenCode. Enforces evidence-first reviews, discovery before design, quality gates before push, and federal-aligned (NIST, FedRAMP, FISMA, DoD-style) assessment. Not a generic coding assistant—focused on platform engineering, DevSecOps, and regulated environments.
+Platform engineering workflow pack for OpenCode. **Federally focused** on FedRAMP, FISMA, NIST 800, **DoD Zero Trust Strategy** (7 pillars), and **DoD Enterprise DevSecOps Fundamentals v2.5**. Enforces evidence-first reviews, discovery before design, quality gates before push. Aligns to NIST SP 800-53, 800-37 (RMF), 800-207 (Zero Trust), 800-190 (Container Security), 800-171 (CUI). Not a generic coding assistant—focused on platform engineering, DevSecOps, and regulated federal environments.
 
 ---
 
@@ -17,7 +17,7 @@ Platform engineering workflow pack for OpenCode. Enforces evidence-first reviews
 | /repo-assess | Full repository assessment. Output: review-score.schema.json |
 | /solution-discovery | Discovery: requirements, constraints, assumptions |
 | /platform-design | Architecture design with tradeoffs |
-| /federal-checklist | Federal compliance; NIST 800-53; no certification claims |
+| /federal-checklist | Federal compliance; FedRAMP, FISMA, NIST 800-53; no certification claims |
 | /gitops-audit | GitOps, CI/CD, IaC maturity |
 | /quality-gate | Pre-push gate. Output: pass / pass_with_warnings / fail |
 | /doc-sync | Documentation drift; propose updates |
@@ -41,7 +41,7 @@ Platform engineering workflow pack for OpenCode. Enforces evidence-first reviews
 
 - **review-score.schema.json** — Review reports: review_target, summary (final_score, letter_grade, confidence, production_readiness), categories (security 25%, reliability 20%, performance 15%, cost_awareness 10%, operational_excellence 30%), findings by severity, top_priorities.
 - **quality-gate.schema.json** — Quality gate: verdict (pass/pass_with_warnings/fail), blockers, warnings, informational.
-- **compliance-report.json** — Federal compliance: control mapping, gaps, evidence, remediation.
+- **compliance-report.json** — Federal compliance: FedRAMP/FISMA/NIST 800 alignment, control mapping, gaps, evidence, remediation, RMF alignment.
 
 ---
 

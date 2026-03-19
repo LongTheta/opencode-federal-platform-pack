@@ -18,7 +18,13 @@ Specifications for OpenCode native tools. These are **contracts** for future imp
 
 ## Status
 
-**Spec only.** No runtime implementation in this pack. Commands use agent prompts and skills. When OpenCode supports custom tools, these specs define the contract.
+| Tool | Status |
+|------|--------|
+| review-score | Implemented (`scripts/review-score.js`) |
+| quality-gate-check | Implemented (`scripts/quality-gate-check.js`) |
+| evidence-extractor | Implemented (`scripts/evidence-extractor.js`) |
+| federal-control-mapper | Implemented (`scripts/federal-control-mapper.js`) |
+| target-architecture-synthesizer | Implemented (`scripts/target-architecture-synthesizer.js`) |
 
 ---
 

@@ -20,5 +20,6 @@ Thumbs.db
 # Build / cache
 dist/
 build/
+_ecc_temp/
 *.log
 .cache/

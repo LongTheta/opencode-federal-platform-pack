@@ -40,6 +40,7 @@ Two ways to use this pack: **plugin only** (minimal) or **full catalog** (everyt
    ```bash
    git clone https://github.com/LongTheta/opencode-federal-platform-pack.git
    cd opencode-federal-platform-pack
+   npm install
    ```
 
 2. Run OpenCode from the pack root:

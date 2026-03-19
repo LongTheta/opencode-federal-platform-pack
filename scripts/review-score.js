@@ -50,18 +50,10 @@ if (typeof module !== "undefined" && module.exports) {
   module.exports = { scoreToGrade, computeFinalScore, productionReadiness, WEIGHTS, GRADE_BANDS };
 }
 
+const { readInput } = require("./lib/read-input.js");
+
 async function main() {
-  let input;
-  const arg = process.argv[2];
-  if (arg === "-" || !arg) {
-    input = await new Promise((r) => {
-      let d = "";
-      process.stdin.on("data", (c) => (d += c));
-      process.stdin.on("end", () => r(d));
-    });
-  } else {
-    input = require("fs").readFileSync(arg, "utf8");
-  }
+  const input = await readInput(process.argv[2]);
   const data = JSON.parse(input || "{}");
   const categories = data.categories || data;
   const finalScore = computeFinalScore(categories);

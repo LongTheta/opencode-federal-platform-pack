@@ -12,6 +12,20 @@ This report provides **readiness indicators**, **risks**, and **recommended evid
 
 ---
 
+## Frameworks in Scope
+
+| Framework | Baseline/Scope |
+|-----------|----------------|
+| FedRAMP | Low / Moderate / High |
+| FISMA | NIST RMF (800-37), 800-53 controls |
+| NIST 800-53 | Security and privacy controls |
+| NIST 800-207 | Zero Trust Architecture |
+| DoD Zero Trust Strategy | 7 pillars (incl. Automation and orchestration) |
+| DoD Enterprise DevSecOps Fundamentals v2.5 | Supply chain, security-at-each-phase, pipeline |
+| NIST 800-190 | Container Security |
+
+---
+
 ## Executive Summary
 
 [2–4 sentences: overall readiness posture, critical risks, key gaps, bottom-line readiness indicator.]
@@ -169,3 +183,51 @@ This report provides **readiness indicators**, **risks**, and **recommended evid
 | **Overall** | | |
 
 **Overall readiness:** [1–5] — [Not ready / Partial / Adequate / Strong / Ready for assessment]
+
+---
+
+## FedRAMP Readiness Estimate
+
+**Baseline in scope:** [Low / Moderate / High]  
+**Estimate:** [Low / Moderate / High]  
+**Rationale:** [Brief summary of control coverage and gaps]
+
+---
+
+## FISMA / RMF Alignment (NIST 800-37)
+
+| RMF Step | Evidence | Gap |
+|----------|----------|-----|
+| Categorize (FIPS 199, 800-60) | | |
+| Select (800-53 controls) | | |
+| Implement | | |
+| Assess (800-53A) | | |
+| Authorize | | |
+| Monitor (ConMon) | | |
+
+---
+
+## DoD Zero Trust Strategy (7 Pillars)
+
+| Pillar | Evidence | Gap |
+|--------|----------|-----|
+| 1. User | | |
+| 2. Device | | |
+| 3. Network & Environment | | |
+| 4. Data | | |
+| 5. Application & Workload | | |
+| 6. Visibility & Analytics | | |
+| 7. Automation & Orchestration | | |
+
+---
+
+## DoD Enterprise DevSecOps Fundamentals
+
+| Area | Evidence | Gap |
+|------|----------|-----|
+| Supply chain (SBOM, provenance, pinned deps) | | |
+| Security at each phase | | |
+| Zero Trust in pipeline | | |
+| Behavior monitoring / observability | | |
+
+**Resources:** [cyber.mil/devsecops/](https://www.cyber.mil/devsecops/) — Playbooks, Reference Design, Fundamentals; [Software DT&E in DevSecOps Guidebook (Jan 2025)](https://www.cto.mil/wp-content/uploads/2025/01/Software_DTE_DEVSECOPS_GB_Jan2025_Signed.pdf) — DT&E planning for pipeline test coverage

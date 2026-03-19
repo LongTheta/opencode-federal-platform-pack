@@ -6,18 +6,20 @@
  * Output: { "verdict": "pass"|"pass_with_warnings"|"fail", "push_ready": bool }
  */
 
+function computeVerdict(data) {
+  const blockers = data.blockers || [];
+  const warnings = data.warnings || [];
+  const verdict = blockers.length > 0 ? "fail" : warnings.length > 0 ? "pass_with_warnings" : "pass";
+  const push_ready = verdict !== "fail";
+  return { verdict, push_ready };
+}
+
+module.exports = { computeVerdict };
+
+const { readInput } = require("./lib/read-input.js");
+
 async function main() {
-  let input;
-  const arg = process.argv[2];
-  if (arg === "-" || !arg) {
-    input = await new Promise((r) => {
-      let d = "";
-      process.stdin.on("data", (c) => (d += c));
-      process.stdin.on("end", () => r(d));
-    });
-  } else {
-    input = require("fs").readFileSync(arg, "utf8");
-  }
+  const input = await readInput(process.argv[2]);
   const data = JSON.parse(input || "{}");
   const { verdict, push_ready } = computeVerdict(data);
   const result = {
@@ -31,7 +33,9 @@ async function main() {
   process.exit(verdict === "fail" ? 2 : 0);
 }
 
-main().catch((e) => {
-  console.error(e.message);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((e) => {
+    console.error(e.message);
+    process.exit(1);
+  });
+}

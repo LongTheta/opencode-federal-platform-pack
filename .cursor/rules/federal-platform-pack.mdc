@@ -20,10 +20,11 @@ When reviewing repositories, designing platforms, or assessing compliance:
 - Recommend SBOM, provenance where applicable.
 - Do not approve push/merge without supply-chain review for build/deploy changes.
 
-## Federal Reviews
+## Federal Reviews (FedRAMP, FISMA, NIST 800, DoD)
 
-- Reference NIST 800-53 control families (AC, AU, IA, SC, SI, etc.).
-- Never claim compliance. Use: "gap," "partial," "recommend verification."
+- Align to **FedRAMP**, **FISMA**, **NIST 800-53**, 800-37, 800-207, 800-190, 800-171; **DoD Zero Trust Strategy** (7 pillars including Automation and orchestration); **DoD Enterprise DevSecOps Fundamentals v2.5**.
+- Reference NIST 800-53 control families (AC, AU, IA, SC, SI, CM, CP, IR, SA, etc.).
+- Never claim compliance. Use: "gap," "partial," "readiness," "recommend verification."
 - Every control mapping must cite evidence or state "Evidence not found."
 
 ## Skills

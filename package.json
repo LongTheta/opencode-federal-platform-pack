@@ -12,6 +12,9 @@
     "quality-gate"
   ],
   "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/LongTheta/opencode-federal-platform-pack.git"
@@ -33,11 +36,20 @@
   "scripts": {
     "validate:review-score": "node scripts/validate-schema.js review-score",
     "validate:quality-gate": "node scripts/validate-schema.js quality-gate",
+    "validate:compliance-report": "node scripts/validate-schema.js compliance-report",
     "verify": "node scripts/verify-pack.js",
-    "test": "node --test tests/"
+    "test": "node scripts/run-tests.js",
+    "test:unit": "node scripts/run-tests.js unit",
+    "test:integration": "node scripts/run-tests.js integration",
+    "test:evidence": "node scripts/run-tests.js evidence",
+    "evidence-extract": "node scripts/evidence-extractor.js",
+    "federal-control-map": "node scripts/federal-control-mapper.js",
+    "target-architecture": "node scripts/target-architecture-synthesizer.js",
+    "lint": "eslint scripts/ tests/ .opencode/plugins/"
   },
   "devDependencies": {
     "ajv": "^8.12.0",
-    "ajv-formats": "^2.1.1"
+    "ajv-formats": "^2.1.1",
+    "eslint": "^8.57.0"
   }
 }

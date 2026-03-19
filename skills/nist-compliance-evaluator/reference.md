@@ -93,16 +93,19 @@
 | CM | Configuration Management | Configuration & Drift |
 | IR | Incident Response | Incident Response |
 
-## Zero Trust (NIST 800-207) Pillars
+## Zero Trust — NIST 800-207 and DoD Zero Trust Strategy
 
-| Pillar | Assessment |
-|--------|------------|
-| Identity | Verify explicitly; least privilege; MFA |
-| Device | Device posture; compliance |
-| Network | Micro-segmentation; deny by default |
-| Application/Workload | App-level auth; workload identity |
-| Data | Encryption; access controls |
-| Visibility & Analytics | Logging; correlation; alerting |
+**DoD Zero Trust Strategy** ([DoD-ZTStrategy.pdf](https://dodcio.defense.gov/Portals/0/Documents/Library/DoD-ZTStrategy.pdf)) defines **7 pillars**. NIST 800-207 covers 6; DoD adds pillar 7.
+
+| # | Pillar | Assessment |
+|---|--------|------------|
+| 1 | **User** (Identity) | Verify explicitly; least privilege; MFA |
+| 2 | **Device** | Device posture; compliance |
+| 3 | **Network** | Micro-segmentation; deny by default |
+| 4 | **Data** | Encryption; access controls |
+| 5 | **Application/Workload** | App-level auth; workload identity |
+| 6 | **Visibility & Analytics** | Logging; correlation; alerting |
+| 7 | **Automation and orchestration** (DoD) | SOAR; policy orchestration; dynamic security responses; incident response automation; pipeline security gates |
 
 ## CIS Benchmark Mapping
 

@@ -40,7 +40,7 @@ Comprehensive review of a software repository for architecture, maintainability,
 ## Routing
 
 - **Agent:** repo-auditor
-- **Skills:** well-architected-review
+- **Skills:** well-architected-review, supply-chain-sbom, container-security, observability-review; terraform-iac (if Terraform)
 - **Tools (future):** evidence-extractor, review-score
 
 ## Output Contract

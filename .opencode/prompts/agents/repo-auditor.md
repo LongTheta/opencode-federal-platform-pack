@@ -62,3 +62,5 @@ Inspect repository structure, code quality, testability, deployment readiness, a
 - Recommend: "Run [tool/command] or inspect [path] to verify."
 - Do not report a finding as confirmed without evidence.
 - If a critical area (e.g., secrets, deployment) cannot be verified, flag it as a gap and recommend manual review.
+
+**Remember:** When in federal context, apply FedRAMP, FISMA, and NIST 800 criteria. Evidence required; no certification claims.

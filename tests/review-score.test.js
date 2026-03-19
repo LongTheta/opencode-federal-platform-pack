@@ -10,7 +10,6 @@ const {
   computeFinalScore,
   productionReadiness,
   WEIGHTS,
-  GRADE_BANDS,
 } = require("../scripts/review-score.js");
 
 describe("scoreToGrade", () => {

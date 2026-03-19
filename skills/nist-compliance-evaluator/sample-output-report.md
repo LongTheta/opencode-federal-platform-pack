@@ -55,18 +55,19 @@ The `federal-workload-app` repository contains Terraform-managed AWS infrastruct
 
 ---
 
-## 4. Zero Trust Maturity Assessment
+## 4. Zero Trust Maturity Assessment (DoD 7 Pillars)
 
 | Pillar | Maturity | Evidence |
 |--------|----------|----------|
-| **Identity** | Partial | IAM roles present; workload identity used; MFA not enforced (Missing Evidence) |
-| **Device** | N/A | Not applicable (serverless/container workload) |
-| **Network** | Partial | Private subnets; some 0.0.0.0/0; VPC endpoints for S3 (Observed) |
-| **Application/Workload** | Partial | ECS task roles; broad permissions (Gap) |
-| **Data** | Partial | TLS on ALB; default RDS encryption; secrets not rotated (Gap) |
-| **Visibility & Analytics** | Partial | CloudWatch logs; alerting partial; CloudTrail status unclear |
+| **1. User** | Partial | IAM roles present; workload identity used; MFA not enforced (Missing Evidence) |
+| **2. Device** | N/A | Not applicable (serverless/container workload) |
+| **3. Network** | Partial | Private subnets; some 0.0.0.0/0; VPC endpoints for S3 (Observed) |
+| **4. Data** | Partial | TLS on ALB; default RDS encryption; secrets not rotated (Gap) |
+| **5. Application/Workload** | Partial | ECS task roles; broad permissions (Gap) |
+| **6. Visibility & Analytics** | Partial | CloudWatch logs; alerting partial; CloudTrail status unclear |
+| **7. Automation & Orchestration** | Partial | CI/CD with scanning; no SOAR/runbook automation evident (Gap) |
 
-**Overall Zero Trust maturity**: **Traditional** — Moving toward Target; identity and network micro-segmentation need improvement.
+**Overall Zero Trust maturity**: **Traditional** — Moving toward Target; identity, network micro-segmentation, and automation/orchestration need improvement.
 
 ---
 

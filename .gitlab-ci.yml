@@ -1,0 +1,72 @@
+# GitLab CI for opencode-federal-platform-pack
+# Verify stage (parallel jobs) + Kaniko build
+
+stages:
+  - verify
+  - build
+
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+
+.lint_audit_verify_base:
+  stage: verify
+  image: node:20
+  before_script:
+    - npm ci
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-npm
+    paths:
+      - .npm/
+
+lint:
+  extends: .lint_audit_verify_base
+  timeout: 15m
+  script:
+    - npm run lint
+
+audit:
+  extends: .lint_audit_verify_base
+  timeout: 15m
+  script:
+    - npm audit --audit-level=high
+
+verify:
+  extends: .lint_audit_verify_base
+  timeout: 20m
+  script:
+    - npm run verify
+
+test:unit:
+  extends: .lint_audit_verify_base
+  timeout: 10m
+  script:
+    - npm run test:unit
+
+test:integration:
+  extends: .lint_audit_verify_base
+  timeout: 15m
+  script:
+    - npm run test:integration
+
+test:evidence:
+  extends: .lint_audit_verify_base
+  timeout: 20m
+  script:
+    - npm run test:evidence
+
+# Kaniko build (no Docker daemon required)
+build:
+  stage: build
+  timeout: 30m
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
+  script:
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}"
+      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}"
+  rules:
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH

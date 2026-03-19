@@ -1,0 +1,16 @@
+# Minimal CI fixture for evidence-extractor and federal-control-mapper
+stages:
+  - test
+  - build
+
+test:
+  stage: test
+  image: node:20
+  script:
+    - npm ci
+    - npm test
+
+build:
+  stage: build
+  script:
+    - echo "Build placeholder"

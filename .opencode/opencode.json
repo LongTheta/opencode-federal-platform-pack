@@ -1,7 +1,7 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "name": "opencode-federal-platform-pack",
-  "description": "OpenCode platform pack: repo review, solution architect discovery, platform design, GitOps audit, federal checklist, quality gate. Executable, evidence-based, enterprise-grade.",
+  "description": "OpenCode platform pack: repo review, solution architect discovery, platform design, GitOps audit, federal checklist (FedRAMP, FISMA, NIST 800), quality gate. Federally focused. Executable, evidence-based, enterprise-grade.",
 
   "instructions": [
     "instructions/aws-derived-principles.md",
@@ -9,10 +9,13 @@
     "instructions/repo-review-standards.md",
     "instructions/architecture-review-standards.md",
     "instructions/federal-review-standards.md",
+    "../contexts/federal-compliance-criteria.md",
     "instructions/documentation-rules.md",
     "instructions/cloud-governance-rules.md",
     "instructions/gitops-governance-rules.md",
-    "../rules/*.md"
+    "../rules/*.md",
+    "../skills/tdd-workflow/SKILL.md",
+    "../skills/security-review/SKILL.md"
   ],
 
   "agent": {
@@ -38,7 +41,7 @@
       "temperature": 0.1
     },
     "federal-security-reviewer": {
-      "description": "Federal-grade review: NIST 800-53, FedRAMP, FISMA, DoD-style controls",
+      "description": "Federal-grade review: FedRAMP, FISMA, NIST 800-53, 800-37 (RMF), 800-207, 800-190, 800-171",
       "mode": "subagent",
       "prompt": "{file:prompts/agents/federal-security-reviewer.md}",
       "tools": { "write": false, "edit": false },
@@ -64,18 +67,102 @@
       "prompt": "{file:prompts/agents/documentation-writer.md}",
       "tools": { "write": false, "edit": false },
       "temperature": 0.2
+    },
+    "planner": {
+      "description": "Expert planning specialist for implementation plans and risk assessment",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/planner.md}",
+      "tools": { "write": false, "edit": false },
+      "temperature": 0.2
+    },
+    "architect": {
+      "description": "Software architecture specialist for system design and technical decisions",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/architect.md}",
+      "tools": { "write": false, "edit": false },
+      "temperature": 0.2
+    },
+    "code-reviewer": {
+      "description": "Reviews code for quality, security, and maintainability",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/code-reviewer.md}",
+      "tools": { "write": false, "edit": false },
+      "temperature": 0.1
+    },
+    "security-reviewer": {
+      "description": "Security vulnerability detection and remediation specialist",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/security-reviewer.md}",
+      "tools": { "write": true, "edit": true },
+      "temperature": 0.1
+    },
+    "tdd-guide": {
+      "description": "Test-Driven Development specialist enforcing write-tests-first methodology",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/tdd-guide.md}",
+      "tools": { "write": true, "edit": true },
+      "temperature": 0.1
+    },
+    "build-error-resolver": {
+      "description": "Build and TypeScript error resolution specialist",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/build-error-resolver.md}",
+      "tools": { "write": true, "edit": true },
+      "temperature": 0.1
+    },
+    "e2e-runner": {
+      "description": "End-to-end testing specialist using Playwright",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/e2e-runner.md}",
+      "tools": { "write": true, "edit": true },
+      "temperature": 0.1
+    },
+    "doc-updater": {
+      "description": "Documentation and codemap specialist. Updates codemaps and documentation.",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/doc-updater.md}",
+      "tools": { "write": true, "edit": true },
+      "temperature": 0.2
+    },
+    "refactor-cleaner": {
+      "description": "Dead code cleanup and consolidation specialist",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/refactor-cleaner.md}",
+      "tools": { "write": true, "edit": true },
+      "temperature": 0.1
+    },
+    "go-reviewer": {
+      "description": "Expert Go code reviewer for idiomatic patterns",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/go-reviewer.md}",
+      "tools": { "write": false, "edit": false },
+      "temperature": 0.1
+    },
+    "go-build-resolver": {
+      "description": "Go build, vet, and compilation error resolution specialist",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/go-build-resolver.md}",
+      "tools": { "write": true, "edit": true },
+      "temperature": 0.1
+    },
+    "database-reviewer": {
+      "description": "PostgreSQL database specialist for query optimization, schema design, security",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/database-reviewer.md}",
+      "tools": { "write": true, "edit": true },
+      "temperature": 0.1
     }
   },
 
   "command": {
     "repo-assess": {
       "description": "Full repository assessment: architecture, security, deployment readiness",
-      "template": "Perform a comprehensive repository assessment. Use skills/well-architected-review. Workflow: (1) repo discovery — structure, entry points, tech stack; (2) architecture inference — components, dependencies; (3) security review — secrets, deps, supply chain; (4) observability review — logs, metrics, health; (5) scoring engine — 0–10 per category; (6) final report. Output: schemas/review-score.schema.json. Categories: security 0.25, reliability 0.20, performance 0.15, cost_awareness 0.10, operational_excellence 0.30. Include: review_target, summary (final_score, letter_grade, confidence, production_readiness), categories with score, rationale, evidence_found, missing_evidence, risks, recommended_actions, findings by severity, top_priorities. Blocking: none. Definition of done: report conforms to schema; all findings cite evidence or state missing_evidence.",
+      "template": "Perform a comprehensive repository assessment. Use skills/well-architected-review, skills/supply-chain-sbom, skills/container-security, skills/observability-review; for Terraform repos also skills/terraform-iac. Workflow: (1) repo discovery — structure, entry points, tech stack; (2) architecture inference — components, dependencies; (3) security review — secrets, deps, supply chain (skills/supply-chain-sbom); (4) container security (skills/container-security, if containers); (5) Terraform IaC (skills/terraform-iac, if *.tf present); (6) observability review (skills/observability-review) — logs, metrics, health; (7) scoring engine — 0–10 per category; (8) final report. Output: schemas/review-score.schema.json. Categories: security 0.25, reliability 0.20, performance 0.15, cost_awareness 0.10, operational_excellence 0.30. Include: review_target, summary (final_score, letter_grade, confidence, production_readiness), categories with score, rationale, evidence_found, missing_evidence, risks, recommended_actions, findings by severity, top_priorities. Blocking: none. Definition of done: report conforms to schema; all findings cite evidence or state missing_evidence.",
       "agent": "repo-auditor"
     },
     "solution-discovery": {
       "description": "Solution architect discovery: requirements, budget, constraints, compliance",
-      "template": "Conduct solution architect discovery. Use contexts/solution-discovery-question-bank.md. Ask clarifying questions about requirements, budget, timeline, users, compliance, and integrations. Produce discovery summary with open questions and recommended next steps. Output: structured markdown. Blocking: none. Definition of done: discovery summary with assumptions, constraints, open questions. Context: $ARGUMENTS",
+      "template": "Conduct solution architect discovery. Use skills/solution-discovery, contexts/solution-discovery-question-bank.md, docs/solution-architect-discovery-framework.md. Ask clarifying questions about requirements, budget, timeline, users, compliance, and integrations. Produce discovery summary with assumptions, constraints, open questions, and risk indicators. Output: structured markdown per solution-architect-discovery-framework. Blocking: none. Definition of done: discovery summary with assumptions, constraints, open questions, risk indicators. Context: $ARGUMENTS",
       "agent": "solution-architect"
     },
     "platform-design": {
@@ -84,13 +171,13 @@
       "agent": "solution-architect"
     },
     "federal-checklist": {
-      "description": "Federal compliance checklist (NIST, FedRAMP, FISMA, DoD)",
-      "template": "Produce federal compliance checklist. Use skills/federal-platform-review, skills/nist-compliance-evaluator, skills/well-architected-review; for AWS also skills/aws-federal-grade-checklist. Workflow: (1) evidence extraction — repo artifacts; (2) control-family mapping — NIST 800-53; (3) readiness report — gaps, evidence, remediation. Output: schemas/review-score.schema.json (primary) and schemas/compliance-report.json. Include: review_target, summary, categories, findings, top_priorities; control mapping in compliance extension. Blocking: none. Definition of done: control mapping; gaps with evidence; remediation roadmap. No certification claims.",
+      "description": "Federal compliance checklist (NIST, FedRAMP, FISMA, DoD Zero Trust, DoD DevSecOps)",
+      "template": "Produce federal compliance checklist. Use skills/federal-platform-review, skills/nist-compliance-evaluator, skills/well-architected-review, skills/supply-chain-sbom, skills/container-security, skills/dod-zero-trust; for Terraform repos also skills/terraform-iac; for AWS also skills/aws-federal-grade-checklist. Workflow: (1) evidence extraction — repo artifacts; (2) control-family mapping — NIST 800-53; (3) DoD Zero Trust 7 pillars (skills/dod-zero-trust); (4) supply chain and SBOM (skills/supply-chain-sbom); (5) container security (skills/container-security, NIST 800-190); (6) Terraform IaC (skills/terraform-iac, DoD Play 2, if *.tf present); (7) DoD DevSecOps Fundamentals alignment; (8) readiness report — gaps, evidence, remediation. Output: schemas/review-score.schema.json (primary) and schemas/compliance-report.json. Include: review_target, summary, categories, findings, top_priorities; control mapping; DoD ZT and DevSecOps alignment in compliance extension. Blocking: none. Definition of done: control mapping; DoD ZT 7 pillars; supply chain; container security; IaC (if Terraform); DoD DevSecOps; gaps with evidence; remediation roadmap. No certification claims.",
       "agent": "federal-security-reviewer"
     },
     "gitops-audit": {
       "description": "GitOps, CI/CD, and platform engineering maturity audit",
-      "template": "Audit GitOps, CI/CD, IaC, observability. Use skills/gitops-capability-audit, skills/well-architected-review. Evaluate 7 capability areas: CI/CD orchestration, GitOps and config-as-code, security scanning and supply chain, promotion and release governance, observability, identity and secrets, policy-as-code. Output: schemas/review-score.schema.json. Include: review_target, summary, categories (map GitOps capabilities to Well-Architected pillars), findings by severity, top_priorities. Blocking: none. Definition of done: findings per capability; evidence; remediation roadmap.",
+      "template": "Audit GitOps, CI/CD, IaC, observability. Use skills/gitops-capability-audit, skills/well-architected-review, skills/supply-chain-sbom, skills/observability-review; for Terraform repos also skills/terraform-iac. Evaluate 7 capability areas: CI/CD orchestration, GitOps and config-as-code (skills/terraform-iac for Terraform IaC), security scanning and supply chain (skills/supply-chain-sbom), promotion and release governance, observability (skills/observability-review), identity and secrets, policy-as-code. Output: schemas/review-score.schema.json. Include: review_target, summary, categories (map GitOps capabilities to Well-Architected pillars), findings by severity, top_priorities. Blocking: none. Definition of done: findings per capability; evidence; remediation roadmap.",
       "agent": "gitops-reviewer"
     },
     "quality-gate": {
@@ -117,8 +204,108 @@
       "description": "Plan multi-step workflow (review → design → federal check) with dependencies",
       "template": "Orchestrate multi-step platform engineering workflow. Given the goal, produce ordered plan with steps, dependencies, suggested commands. Example flows: repo-assess → platform-design → federal-checklist; solution-discovery → platform-design → quality-gate; gitops-audit → repo-assess → quality-gate. For each step: command, inputs, expected output, next-step trigger. Output: numbered plan with dependencies. Blocking: none. Definition of done: plan with at least 2 steps. Goal: $ARGUMENTS",
       "agent": "solution-architect"
+    },
+    "plan": {
+      "description": "Create implementation plan with risk assessment",
+      "template": "{file:commands/plan.md}\n\n$ARGUMENTS",
+      "agent": "planner",
+      "subtask": true
+    },
+    "tdd": {
+      "description": "Enforce TDD workflow with 80%+ coverage",
+      "template": "{file:commands/tdd.md}\n\n$ARGUMENTS",
+      "agent": "tdd-guide",
+      "subtask": true
+    },
+    "code-review": {
+      "description": "Review code for quality, security, and maintainability",
+      "template": "{file:commands/code-review.md}\n\n$ARGUMENTS",
+      "agent": "code-reviewer",
+      "subtask": true
+    },
+    "security": {
+      "description": "Run comprehensive security review",
+      "template": "{file:commands/security.md}\n\n$ARGUMENTS",
+      "agent": "security-reviewer",
+      "subtask": true
+    },
+    "build-fix": {
+      "description": "Fix build and TypeScript errors with minimal changes",
+      "template": "{file:commands/build-fix.md}\n\n$ARGUMENTS",
+      "agent": "build-error-resolver",
+      "subtask": true
+    },
+    "e2e": {
+      "description": "Generate and run E2E tests with Playwright",
+      "template": "{file:commands/e2e.md}\n\n$ARGUMENTS",
+      "agent": "e2e-runner",
+      "subtask": true
+    },
+    "refactor-clean": {
+      "description": "Remove dead code and consolidate duplicates",
+      "template": "{file:commands/refactor-clean.md}\n\n$ARGUMENTS",
+      "agent": "refactor-cleaner",
+      "subtask": true
+    },
+    "update-docs": {
+      "description": "Update documentation for recent changes",
+      "template": "{file:commands/update-docs.md}\n\n$ARGUMENTS",
+      "agent": "doc-updater",
+      "subtask": true
+    },
+    "update-codemaps": {
+      "description": "Update codemaps for codebase navigation",
+      "template": "{file:commands/update-codemaps.md}\n\n$ARGUMENTS",
+      "agent": "doc-updater",
+      "subtask": true
+    },
+    "test-coverage": {
+      "description": "Analyze and improve test coverage",
+      "template": "{file:commands/test-coverage.md}\n\n$ARGUMENTS",
+      "agent": "tdd-guide",
+      "subtask": true
+    },
+    "setup-pm": {
+      "description": "Configure package manager preference",
+      "template": "{file:commands/setup-pm.md}\n\n$ARGUMENTS",
+      "agent": "solution-architect"
+    },
+    "learn": {
+      "description": "Extract patterns and learnings from current session",
+      "template": "{file:commands/learn.md}\n\n$ARGUMENTS",
+      "agent": "solution-architect"
+    },
+    "skill-create": {
+      "description": "Generate skills from git history analysis",
+      "template": "{file:commands/skill-create.md}\n\n$ARGUMENTS",
+      "agent": "solution-architect"
+    },
+    "go-review": {
+      "description": "Go code review for idiomatic patterns",
+      "template": "{file:commands/go-review.md}\n\n$ARGUMENTS",
+      "agent": "go-reviewer",
+      "subtask": true
+    },
+    "go-test": {
+      "description": "Go TDD workflow with table-driven tests",
+      "template": "{file:commands/go-test.md}\n\n$ARGUMENTS",
+      "agent": "tdd-guide",
+      "subtask": true
+    },
+    "go-build": {
+      "description": "Fix Go build and vet errors",
+      "template": "{file:commands/go-build.md}\n\n$ARGUMENTS",
+      "agent": "go-build-resolver",
+      "subtask": true
+    },
+    "eval": {
+      "description": "Run evaluation against acceptance criteria",
+      "template": "{file:commands/eval.md}\n\n$ARGUMENTS",
+      "agent": "solution-architect"
     }
   },
 
-  "plugin": []
+  "plugin": [
+    "./plugins/federal-platform-enforcement.js"
+  ]
 }

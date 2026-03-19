@@ -1,128 +1,171 @@
 # opencode-federal-platform-pack
 
-Executable OpenCode platform pack for repository architecture reviews, solution architect discovery, platform design, GitOps/DevSecOps audits, federal-grade evidence-based reviews, and pre-push quality enforcement.
+**OpenCode pack for platform engineering and federal-aligned assessment.** Evidence-based reviews, GitOps audits, FedRAMP/FISMA/NIST readiness checks, and pre-push quality enforcement.
+
+**What we do:** We help teams assess repositories and platforms for federal compliance (FedRAMP, FISMA, NIST 800-53, DoD Zero Trust, DoD DevSecOps), run GitOps maturity audits, and enforce quality gates before push. All outputs are structured (JSON schemas)—no free-form reports. We require evidence citations and never claim certification.
 
 ---
 
-## Overview
+## At a Glance
 
-This pack is an **OpenCode operating system** for platform engineering. It provides commands, agents, skills, plugins, and schemas that work together—not a prompt collection. Commands route to agents; agents invoke skills; plugins enforce at tool execution; outputs conform to schemas.
+| What | Count |
+|------|-------|
+| **Commands** | 27 |
+| **Agents** | 19 |
+| **Skills** | 16 |
+| **Schemas** | review-score, quality-gate, compliance-report |
 
-**What it is:** An executable, installable pack that produces evidence-based reviews, discovery summaries, architecture options, federal checklists, GitOps audits, and quality-gate verdicts. Plugin blocks unsafe actions; quality-gate blocks push when verdict is fail.
-
-**What it is not:** A generic AI agent collection. It does not optimize for breadth. It focuses on platform engineering, DevSecOps, and federal-aligned assessment.
+**Focus:** Platform engineering, DevSecOps, federal compliance (FedRAMP, FISMA, NIST 800, DoD Zero Trust, DoD DevSecOps). Not a generic AI pack—evidence required, no certification claims.
 
 ---
 
-## How This Differs from Generic AI Packs
+## Quick Start
 
-| Aspect | Generic packs | This pack |
-|--------|---------------|-----------|
-| **Evidence** | Often generic advice | Requires file/config citations; flags missing evidence |
-| **Discovery** | Jumps to implementation | Asks questions first; documents assumptions |
-| **Security** | Optional or advisory | Plugin blocks .env read, dangerous bash; quality-gate blocks push for secrets, :latest |
-| **Output** | Free-form | Structured schemas (review-score, quality-gate, compliance-report) |
-| **Enforcement** | Documentation only | Plugin hooks + quality-gate command |
-| **Scoring** | Ad hoc | Weighted categories, letter grades, production readiness |
+```bash
+git clone https://github.com/LongTheta/opencode-federal-platform-pack.git
+cd opencode-federal-platform-pack
+npm install
+npm run verify
+```
+
+**Use it:**
+- **Plugin only** — Copy `federal-platform-enforcement.js` for governance (blocks secrets, warns on push).
+- **Full pack** — Run OpenCode from this repo or copy `.opencode/` into your project.
+
+See [INSTALL.md](INSTALL.md) for options.
+
+---
+
+## What This Pack Does
+
+| Capability | How |
+|------------|-----|
+| **Repo assessment** | `/repo-assess` — Architecture, security, deployment readiness; structured scorecard |
+| **Federal compliance** | `/federal-checklist` — NIST 800-53, FedRAMP, FISMA, DoD ZT, DoD DevSecOps mapping |
+| **GitOps audit** | `/gitops-audit` — CI/CD, IaC, supply chain, observability maturity |
+| **Quality gate** | `/quality-gate` — Pre-push check; blocks on secrets, :latest, missing review |
+| **Discovery & design** | `/solution-discovery`, `/platform-design` — Requirements, constraints, architecture options |
+| **Development workflow** | `/plan`, `/tdd`, `/code-review`, `/security`, `/build-fix`, `/e2e`, etc. |
+
+**Outputs:** Structured JSON (review-score, quality-gate, compliance-report). No free-form reports.
+
+---
+
+## Strengths
+
+- **Federal alignment** — FedRAMP, FISMA, NIST 800-53, DoD ZT, DoD DevSecOps, DT&E Guidebook
+- **Evidence-based** — File/config citations; flags missing evidence; no certification claims
+- **Structured output** — review-score, quality-gate, compliance-report schemas; schema-valid samples
+- **Enforcement** — Plugin blocks secrets; quality-gate blocks push on critical issues
+- **Documentation** — Architecture, usage, troubleshooting, glossary, command matrix
+- **CI/CD** — Lint, npm audit, verify, tests, schema validation in GitLab CI
+
+---
+
+## Federal Frameworks
+
+Assessments align to these frameworks. Outputs use **readiness**, **gap**, **partial** — never "compliant" or "certified."
+
+| Framework | Scope |
+|-----------|-------|
+| **FedRAMP** | Low/Moderate/High baselines; cloud authorization |
+| **FISMA** | NIST RMF (800-37), security controls |
+| **NIST SP 800-53** | Security and privacy controls (AC, AU, IA, SC, SI, CM, CP, IR, SA) |
+| **NIST SP 800-53A** | Assessment procedures |
+| **NIST SP 800-207** | Zero Trust Architecture |
+| **DoD Zero Trust Strategy** | 7 pillars (incl. Automation and orchestration) |
+| **DoD Enterprise DevSecOps Fundamentals v2.5** | Supply chain, security-at-each-phase, pipeline |
+| **Software DT&E in DevSecOps Guidebook** (Jan 2025) | DT&E planning, SAST/DAST/IAST, SCA, SBOM |
+| **NIST SP 800-190** | Container Security |
+| **NIST SP 800-171** | CUI protection |
 
 ---
 
 ## Commands
 
-| Command | Purpose | Output |
-|---------|---------|--------|
-| `/repo-assess` | Full repository assessment | review-score.schema.json |
-| `/solution-discovery` | Discovery: requirements, constraints | Discovery summary |
-| `/platform-design` | Architecture with tradeoffs | Architecture options |
-| `/federal-checklist` | NIST 800-53 mapping; no certification | review-score + compliance-report |
-| `/gitops-audit` | GitOps, CI/CD, IaC maturity | review-score.schema.json |
-| `/quality-gate` | Pre-push gate | pass / pass_with_warnings / fail |
-| `/doc-sync` | Documentation drift; propose updates | Drift report |
-| `/verify` | Quick verification | quality-gate verdict |
-| `/checkpoint` | Session handoff | Checkpoint markdown |
-| `/orchestrate` | Multi-step workflow plan | Workflow plan |
+### Platform & Federal
+
+| Command | Purpose |
+|---------|---------|
+| `/repo-assess` | Full repository assessment |
+| `/solution-discovery` | Discovery: requirements, constraints |
+| `/platform-design` | Architecture with tradeoffs |
+| `/federal-checklist` | FedRAMP, FISMA, NIST mapping; DoD ZT & DevSecOps |
+| `/gitops-audit` | GitOps, CI/CD, IaC maturity |
+| `/quality-gate` | Pre-push gate (pass / pass_with_warnings / fail) |
+| `/doc-sync` | Documentation drift detection |
+| `/verify` | Quick verification |
+| `/checkpoint` | Session handoff |
+| `/orchestrate` | Multi-step workflow plan |
+
+### Development Workflow
+
+| Command | Purpose |
+|---------|---------|
+| `/plan` | Implementation plan with risk assessment |
+| `/tdd` | TDD workflow (80%+ coverage) |
+| `/code-review` | Code quality, security, maintainability |
+| `/security` | Comprehensive security review |
+| `/build-fix` | Fix build/TypeScript errors |
+| `/e2e` | E2E tests with Playwright |
+| `/refactor-clean` | Dead code removal |
+| `/update-docs`, `/update-codemaps` | Documentation updates |
+| `/test-coverage` | Coverage analysis |
+| `/go-review`, `/go-test`, `/go-build` | Go-specific workflows |
+| `/setup-pm`, `/learn`, `/skill-create`, `/eval` | Setup and utilities |
 
 ---
 
-## Agents
+## Agents & Skills
 
-| Agent | Commands |
-|-------|----------|
-| **repo-auditor** | repo-assess, quality-gate, verify |
-| **solution-architect** | solution-discovery, platform-design, checkpoint, orchestrate |
-| **federal-security-reviewer** | federal-checklist |
-| **gitops-reviewer** | gitops-audit |
-| **documentation-writer** | doc-sync |
-| **product-manager-discovery** | (scoping) |
-| **cloud-platform-reviewer** | (cloud-specific review) |
+**Agents:** repo-auditor, federal-security-reviewer, gitops-reviewer, solution-architect, planner, architect, code-reviewer, security-reviewer, tdd-guide, build-error-resolver, e2e-runner, doc-updater, refactor-cleaner, go-reviewer, go-build-resolver, database-reviewer, cloud-platform-reviewer, documentation-writer, product-manager-discovery
+
+**Skills:** well-architected-review, federal-platform-review, nist-compliance-evaluator, gitops-capability-audit, aws-federal-grade-checklist, aws/azure/gcp-platform-review, supply-chain-sbom, container-security, dod-zero-trust, solution-discovery, observability-review, terraform-iac, tdd-workflow, security-review
 
 ---
 
-## Skills
+## Enforcement & Guardrails
 
-| Skill | Used By |
-|-------|---------|
-| **well-architected-review** | repo-assess, federal-checklist, gitops-audit |
-| **federal-platform-review** | federal-checklist |
-| **nist-compliance-evaluator** | federal-checklist |
-| **gitops-capability-audit** | gitops-audit |
-| **aws-federal-grade-checklist** | federal-checklist (AWS) |
-| **aws/azure/gcp-platform-review** | Cloud-specific review |
+| Plugin | Behavior |
+|--------|----------|
+| **Block** | `.env` read; dangerous bash; `git push` when `FEDERAL_PLATFORM_BLOCK_PUSH=1` |
+| **Warn** | `git push`; secrets in edits |
+| **Log** | Supply-chain reminder (Dockerfile, package.json, go.mod) |
 
----
-
-## Plugins and Enforcement
-
-**federal-platform-enforcement.js** — Runs during tool execution:
-- **Block:** Read .env; dangerous bash (rm -rf /, etc.); git push when `FEDERAL_PLATFORM_BLOCK_PUSH=1`
-- **Warn:** git push (default); secrets in write/edit
-- **Log:** Supply-chain reminder when editing Dockerfile, package.json, go.mod
-
-**Quality-gate command** — Produces verdict. Verdict fail blocks push readiness. See `.opencode/plugins/governance-plugin/rules-map.md` for block/warn/info matrix.
+**Quality-gate:** Fails on secrets, `:latest` in prod, missing security review for changes, missing docs for meaningful changes.
 
 ---
 
-## Scoring Engine
+## Scoring
 
-All assessment commands use the same model:
-- **Categories:** Security 25%, Reliability 20%, Performance 15%, Cost Awareness 10%, Operational Excellence 30%
-- **Scale:** 0–10 per category. Letter grades: A (9.0–10), B (8.0–8.9), C (7.0–7.9), D (5.5–6.9), F (<5.5)
-- **Production readiness:** ready | conditionally_ready | not_ready
-- **Schema:** `schemas/review-score.schema.json`
+- **Categories:** Security 25%, Reliability 20%, Performance 15%, Cost 10%, Operational Excellence 30%
+- **Grades:** A (9.0–10), B (8.0–8.9), C (7.0–7.9), D (5.5–6.9), F (<5.5)
+- **Readiness:** ready | conditionally_ready | not_ready
 
 ---
 
 ## Repo Structure
 
 ```
-.opencode/
-  opencode.json       Control plane: commands, agents, instructions
-  commands/          10 commands with lifecycle design
-  prompts/agents/    7 agent prompts
-  plugins/
-    federal-platform-enforcement.js
-    pre-merge-quality.js
-    governance-plugin/    Event model, rules-map, plugin spec
-  tools/             Native tool specs (review-score, quality-gate-check, etc.)
-  instructions/      Core engineering, standards, rules
+.opencode/          Commands, agents, plugins, instructions
 skills/              well-architected-review, federal-platform-review, gitops-capability-audit, etc.
-schemas/             review-score, quality-gate, compliance-report, command-routing
-rules/               evidence, push verification, docs, security, tagging
-contexts/            solution-discovery question bank, repo review context
-docs/                Architecture, usage, scoring, enforcement, routing, packaging
-examples/            Sample reports, end-to-end run
+schemas/             review-score, quality-gate, compliance-report
+contexts/            solution-discovery question bank, federal-compliance-criteria
+docs/                Architecture, usage, scoring, enforcement
+.cursor/rules/       Cursor IDE rules
 ```
 
 ---
 
-## Quick Start
+## Verification
 
-1. Clone this repository.
-2. **Plugin only:** Copy `.opencode/plugins/federal-platform-enforcement.js` into your project's `.opencode/plugins/`.
-3. **Full catalog:** Copy `.opencode/` and supporting dirs, or set `OPENCODE_CONFIG_DIR` to this pack's root.
-4. Run `/repo-assess`, `/orchestrate`, `/quality-gate`.
+```bash
+npm run lint      # ESLint on scripts, tests, plugins
+npm run verify    # Structure, schemas, scripts, tests
+npm test          # Unit tests + schema validation
+```
 
-See [INSTALL.md](INSTALL.md) for plugin vs full catalog, skills independently, future npm install.
+CI (`.gitlab-ci.yml`): lint, npm audit, verify, tests, schema validation. Kaniko build on tags/branches.
 
 ---
 
@@ -130,37 +173,54 @@ See [INSTALL.md](INSTALL.md) for plugin vs full catalog, skills independently, f
 
 | Doc | Purpose |
 |-----|---------|
-| [INSTALL](INSTALL.md) | Plugin vs full catalog; skills independently; future install |
+| [INSTALL](INSTALL.md) | Plugin vs full catalog; skills independently |
 | [Architecture](docs/architecture.md) | Component map, design principles |
 | [Usage](docs/usage.md) | Installation, commands, examples |
+| [Command Matrix](docs/command-matrix.md) | "I want to…" → command |
 | [Command Routing](docs/command-routing.md) | Command → agent → skill |
-| [Command-to-Skill Mapping](docs/command-to-skill-mapping.md) | Full mapping table |
-| [Routing Matrix](docs/routing-matrix.md) | Quick reference |
+| [Quality Gate](docs/quality-gate-workflow.md) | Block/warn/info rules |
 | [Enforcement Model](docs/enforcement-model.md) | Plugin vs command vs rules |
-| [Plugin and Hook Model](docs/plugin-and-hook-model.md) | Event model, hooks |
-| [Scoring Model](docs/scoring-model.md) | Categories, weights, grades |
-| [Quality Gate](docs/quality-gate-workflow.md) | Block/warn/info |
-| [Packaging Strategy](docs/packaging-strategy.md) | Distribution modes |
-| [Example End-to-End](docs/example-end-to-end-review.md) | Full workflow |
+| [Troubleshooting](docs/troubleshooting.md) | Common issues and fixes |
+| [Glossary](docs/glossary.md) | Federal frameworks, RMF, control families |
+| [Before/After](examples/before-after-comparison.md) | Remediation impact example |
+| [Sample Outputs](examples/) | sample-federal-checklist-output.json, sample-gitops-audit-output.json (schema-valid) |
 
 ---
 
-## Verification
+## How This Differs from Generic Packs
 
-```bash
-npm install
-npm run verify          # Smoke test: structure, schemas, scripts, tests
-npm test                # Unit tests + schema validation
-```
+| Aspect | Generic | This pack |
+|--------|---------|-----------|
+| Evidence | Often generic | File/config citations; flags missing evidence |
+| Discovery | Jumps to implementation | Asks questions first; documents assumptions |
+| Security | Optional | Plugin blocks; quality-gate blocks push |
+| Output | Free-form | Structured schemas |
+| Compliance | Vague | FedRAMP, FISMA, NIST, DoD; no certification claims |
 
-CI runs quality-gate on every PR (`.github/workflows/quality-gate.yml`): verify, tests, schema validation.
+---
+
+## Inspiration & How We Differ from Everything Claude Code
+
+This pack was inspired by [Everything Claude Code](https://github.com/affaan-m/everything-claude-code) (ECC)—the agent harness performance optimization system for Claude Code, Codex, OpenCode, and Cursor.
+
+| Aspect | Everything Claude Code | This pack |
+|--------|------------------------|-----------|
+| **Scope** | General software development across many languages and frameworks | Platform engineering and federal compliance only |
+| **Focus** | Harness performance, token optimization, memory, continuous learning, broad dev workflows | Repo assessment, federal checklist, GitOps audit, quality gate, solution discovery |
+| **Skills** | 108+ skills (Django, Laravel, Spring Boot, frontend, backend, TDD, etc.) | 16 skills (well-architected, federal-platform-review, NIST, GitOps, supply-chain, container, DoD ZT, solution-discovery, observability, terraform-iac, cloud platform) |
+| **Output** | Free-form; varies by command | Structured JSON only (review-score, quality-gate, compliance-report schemas) |
+| **Compliance** | General security (OWASP, AgentShield) | FedRAMP, FISMA, NIST 800-53, DoD ZT, DoD DevSecOps—readiness mapping, no certification claims |
+| **Evidence** | Not required | Required—file/config citations; missing evidence flagged |
+| **Primary harness** | Claude Code (with Cursor, Codex, OpenCode support) | OpenCode-first (with Cursor rules) |
+
+**Use ECC when:** You need broad development workflows, multi-language support, and harness optimization. **Use this pack when:** You need federal compliance mapping, GitOps maturity audits, platform architecture reviews, or evidence-based readiness assessments for government/DoD work.
 
 ---
 
 ## Guardrails
 
 - **Evidence required** — Recommendations cite files/configs; missing evidence flagged.
-- **No certification claims** — Federal outputs use "readiness," "gap," "partial" — never "compliant" or "certified."
-- **Security blocks push** — Plaintext secrets, :latest in prod, missing security review block push.
+- **No certification claims** — Use "readiness," "gap," "partial."
+- **Security blocks push** — Secrets, `:latest`, missing review block push.
 - **Docs required** — Meaningful changes require documentation updates.
-- **Tagging for cloud** — Cloud resources need environment, owner, cost center tags.
+- **Tagging** — Cloud resources need environment, owner, cost center tags.

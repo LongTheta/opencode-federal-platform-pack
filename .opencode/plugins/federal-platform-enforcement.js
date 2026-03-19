@@ -5,9 +5,9 @@
  */
 
 const SECRET_PATTERNS = [
-  /\b(api[_-]?key|apikey|secret|password|passwd|token|credential)\s*[:=]\s*['"]?[a-zA-Z0-9_\-]{20,}/i,
+  /\b(api[_-]?key|apikey|secret|password|passwd|token|credential)\s*[:=]\s*['"]?[a-zA-Z0-9_-]{20,}/i,
   /\b(aws_access_key|aws_secret|AZURE_|GCP_|GOOGLE_)\w*\s*[:=]/i,
-  /Bearer\s+[a-zA-Z0-9_\-\.]+/i,
+  /Bearer\s+[a-zA-Z0-9_.-]+/i,
 ];
 
 const DANGEROUS_BASH = [
@@ -29,11 +29,11 @@ function isDangerousBash(cmd) {
 }
 
 export const FederalPlatformEnforcement = async ({
-  project,
+  project: _project,
   client,
-  $,
-  directory,
-  worktree,
+  $: _$,
+  directory: _directory,
+  worktree: _worktree,
 }) => {
   let qualityGateReminderShown = false;
 

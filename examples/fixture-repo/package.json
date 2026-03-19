@@ -1,0 +1,9 @@
+{
+  "name": "fixture-demo-app",
+  "version": "1.0.0",
+  "description": "Minimal fixture for /federal-checklist and /gitops-audit demos",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"No tests\""
+  }
+}

@@ -8,7 +8,15 @@ risk_tier: 1
 
 Provides a federal-grade platform and repository review checklist for modern cloud-native systems. Phrase results as **readiness indicators**, **risks**, and **recommended evidence** — never as formal compliance or certification.
 
-**Informed by:** NIST-style control thinking, FedRAMP/FISMA-style assurance expectations, DoD-style platform discipline.
+**Federally focused:** Aligns to **FedRAMP**, **FISMA**, **NIST 800**, **DoD Zero Trust Strategy** (7 pillars), and **DoD Enterprise DevSecOps Fundamentals v2.5**:
+
+- **NIST SP 800-53** — Security and privacy controls
+- **NIST SP 800-37** — Risk Management Framework
+- **NIST SP 800-207** — Zero Trust Architecture
+- **DoD Zero Trust Strategy** — 7 pillars including Automation and orchestration
+- **DoD Enterprise DevSecOps Fundamentals** — Supply chain, security-at-each-phase, pipeline
+- **NIST SP 800-190** — Container Security
+- **NIST SP 800-171** — CUI protection (when applicable)
 
 ---
 
@@ -23,18 +31,20 @@ Provides a federal-grade platform and repository review checklist for modern clo
 
 ## Evaluation Domains
 
-| Domain | What to Assess |
-|--------|----------------|
-| **Architecture clarity** | Structure, boundaries, scalability, technology choices |
-| **CI/CD maturity** | Pipeline stages, security gates, artifact handling |
-| **GitOps readiness** | Declarative config, drift, promotion, environment separation |
-| **IAM and secrets patterns** | Least privilege, workload identity, external secrets |
-| **Logging, monitoring, auditability** | Metrics, logs, tracing, retention, audit trails |
-| **SBOM and software supply chain** | Dependencies pinned, SBOM, provenance, attestation |
-| **Environment separation and promotion controls** | Dev/stage/prod boundaries, manual approval, no skip |
-| **IaC quality and policy enforcement** | Terraform/CloudFormation, drift, policy-as-code |
-| **Documentation and traceability** | README, runbooks, ADRs, change documentation |
-| **Evidence quality** | Observable artifacts, verifiable findings, no unverified claims |
+| Domain | What to Assess | DoD Playbook Play |
+|--------|----------------|-------------------|
+| **Architecture clarity** | Structure, boundaries, scalability, technology choices | Play 1 (Culture), Play 6 (Software Factory) |
+| **CI/CD maturity** | Pipeline stages, security gates, artifact handling | Play 7 (Meaningful Pipeline) |
+| **GitOps readiness** | Declarative config, drift, promotion, environment separation | Play 2 (IaC), Play 7 |
+| **IAM and secrets patterns** | Least privilege, workload identity, external secrets | Play 9 (Cyber Resilience) |
+| **Logging, monitoring, auditability** | Metrics, logs, tracing, retention, audit trails | Play 9 |
+| **SBOM and software supply chain** | Dependencies pinned, SBOM, provenance, attestation | Play 7 |
+| **Environment separation and promotion controls** | Dev/stage/prod boundaries, manual approval, no skip | Play 6, Play 7 |
+| **IaC quality and policy enforcement** | Terraform/CloudFormation, drift, policy-as-code | Play 2 |
+| **Documentation and traceability** | README, runbooks, ADRs, change documentation | Play 1 |
+| **Evidence quality** | Observable artifacts, verifiable findings, no unverified claims | Play 4 (Capability Model), Play 5 (Continuous Improvement) |
+
+**Remediation:** When citing a finding, include the relevant Playbook play (e.g., "See Play 7 — Define a Meaningful DevSecOps Pipeline").
 
 ---
 
@@ -121,8 +131,13 @@ See `output-template.md` for structure.
 
 ---
 
+**Remember:** Federal rules apply. Map to FedRAMP, FISMA, and NIST 800-53. Use readiness language; never claim certification. Evidence required for every finding.
+
+---
+
 ## References
 
+- [Software DT&E in DevSecOps Guidebook (Jan 2025)](https://www.cto.mil/wp-content/uploads/2025/01/Software_DTE_DEVSECOPS_GB_Jan2025_Signed.pdf) — OUSD(R&E)/DTE&A; DT&E planning, pipeline test coverage
 - `instructions/federal-review-standards.md` — Federal review language and control format
 - `instructions/evidence-before-claims.md` — Evidence requirements
 - `instructions/aws-derived-principles.md` — Universal platform principles

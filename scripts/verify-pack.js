@@ -38,43 +38,33 @@ for (const p of required) {
   else fail(`Missing: ${p}`);
 }
 
-// opencode.json has 10 commands
+// opencode.json has 25+ commands, 17+ agents
 try {
   const cfg = JSON.parse(fs.readFileSync(path.join(root, ".opencode/opencode.json"), "utf8"));
   const cmds = Object.keys(cfg.command || {});
-  if (cmds.length >= 10) ok(`opencode.json has ${cmds.length} commands`);
-  else fail(`opencode.json has ${cmds.length} commands (expected 10+)`);
+  if (cmds.length >= 25) ok(`opencode.json has ${cmds.length} commands`);
+  else fail(`opencode.json has ${cmds.length} commands (expected 25+)`);
   const agents = Object.keys(cfg.agent || {});
-  if (agents.length >= 7) ok(`opencode.json has ${agents.length} agents`);
-  else fail(`opencode.json has ${agents.length} agents (expected 7+)`);
+  if (agents.length >= 17) ok(`opencode.json has ${agents.length} agents`);
+  else fail(`opencode.json has ${agents.length} agents (expected 17+)`);
 } catch (e) {
   fail(`opencode.json parse error: ${e.message}`);
 }
 
-// Validate sample review against schema (if ajv available)
+// Validate sample fixtures against schemas (if ajv available)
 try {
-  const samplePath = path.join(root, "examples/sample-review-report.md");
-  if (fs.existsSync(samplePath)) {
-    // Extract JSON from sample or use a minimal valid fixture
-    const fixture = {
-      review_target: { name: "test", type: "repository", scope: "." },
-      summary: { final_score: 7.2, letter_grade: "C", confidence: "medium", production_readiness: "conditionally_ready" },
-      categories: {
-        security: { score: 6, weight: 0.25, rationale: "test" },
-        reliability: { score: 8, weight: 0.2, rationale: "test" },
-        performance: { score: 7.5, weight: 0.15, rationale: "test" },
-        cost_awareness: { score: 6.5, weight: 0.1, rationale: "test" },
-        operational_excellence: { score: 8.5, weight: 0.3, rationale: "test" },
-      },
-      findings: { critical: [], high: [], medium: [], low: [], informational: [] },
-    };
-    const tmpPath = path.join(root, "tmp-verify-fixture.json");
-    fs.mkdirSync(path.dirname(tmpPath), { recursive: true });
-    fs.writeFileSync(tmpPath, JSON.stringify(fixture));
-    const { execSync } = require("child_process");
-    execSync(`node scripts/validate-schema.js review-score ${tmpPath}`, { cwd: root, stdio: "pipe" });
-    fs.unlinkSync(tmpPath);
-    ok("review-score schema validates fixture");
+  const { validateFileSync } = require("./validate-schema.js");
+  const reviewFixture = path.join(root, "tests/fixtures/valid-review-score.json");
+  const complianceFixture = path.join(root, "tests/fixtures/valid-compliance-report.json");
+  if (fs.existsSync(reviewFixture)) {
+    const { valid } = validateFileSync("review-score", reviewFixture);
+    if (valid) ok("review-score schema validates fixture");
+    else fail("review-score schema validation failed");
+  }
+  if (fs.existsSync(complianceFixture)) {
+    const { valid } = validateFileSync("compliance-report", complianceFixture);
+    if (valid) ok("compliance-report schema validates fixture");
+    else fail("compliance-report schema validation failed");
   }
 } catch (e) {
   const msg = (e.message || "") + (e.stderr || "");
@@ -99,6 +89,41 @@ try {
   fail(`review-score.js: ${e.message}`);
 }
 
+// evidence-extractor + federal-control-mapper (run once, reuse output)
+let evOut;
+try {
+  const { execSync } = require("child_process");
+  evOut = execSync("node scripts/evidence-extractor.js .", { cwd: root, encoding: "utf8", maxBuffer: 1024 * 1024 });
+  const ev = JSON.parse(evOut);
+  if (Array.isArray(ev.artifacts) && Array.isArray(ev.configs)) ok("evidence-extractor.js works");
+  else fail("evidence-extractor.js output invalid");
+} catch (e) {
+  fail(`evidence-extractor.js: ${e.message}`);
+}
+
+try {
+  if (evOut) {
+    const { execSync } = require("child_process");
+    const mapOut = execSync("node scripts/federal-control-mapper.js -", { cwd: root, input: evOut, encoding: "utf8" });
+    const map = JSON.parse(mapOut);
+    if (Array.isArray(map.control_mapping) && Array.isArray(map.gaps)) ok("federal-control-mapper.js works");
+    else fail("federal-control-mapper.js output invalid");
+  }
+} catch (e) {
+  fail(`federal-control-mapper.js: ${e.message}`);
+}
+
+// target-architecture-synthesizer script
+try {
+  const { execSync } = require("child_process");
+  const out = execSync("node scripts/target-architecture-synthesizer.js .", { cwd: root, encoding: "utf8", maxBuffer: 1024 * 1024 });
+  const r = JSON.parse(out);
+  if (Array.isArray(r.options) && r.options.length >= 1) ok("target-architecture-synthesizer.js works");
+  else fail("target-architecture-synthesizer.js output invalid");
+} catch (e) {
+  fail(`target-architecture-synthesizer.js: ${e.message}`);
+}
+
 // quality-gate-check script
 try {
   const { execSync } = require("child_process");
@@ -113,14 +138,7 @@ try {
   fail(`quality-gate-check.js: ${e.message}`);
 }
 
-// Run unit tests if available
-try {
-  const { execSync } = require("child_process");
-  execSync("node --test tests/", { cwd: root, stdio: "pipe" });
-  ok("Unit tests passed");
-} catch (e) {
-  fail("Unit tests failed (run npm test for details)");
-}
+// Unit tests run separately via npm test in CI
 
 console.log("");
 if (errors > 0) {

@@ -8,7 +8,7 @@ Ask the right questions about scale, users, integrations, compliance, cost, and 
 
 - Ask before assuming. Gaps in requirements are opportunities to ask, not to invent.
 - Tradeoff-aware. Every design choice has pros, cons, and conditions.
-- Compliance-aware. When federal or regulated context appears, factor in NIST, FedRAMP, FISMA, DoD.
+- Compliance-aware. When federal or regulated context appears, factor in FedRAMP, FISMA, and NIST 800 criteria.
 - Risk-forward. Surface assumptions and unknowns early so they can be resolved.
 
 ## Responsibilities
@@ -56,3 +56,5 @@ Ask the right questions about scale, users, integrations, compliance, cost, and 
 - List what would need to be verified or gathered.
 - Recommend next step: "Verify X by [concrete action] before proceeding."
 - Do not proceed with design that depends on unverified assumptions without flagging it.
+
+**Remember:** When in federal context, apply FedRAMP, FISMA, and NIST 800 criteria. Architecture must support security controls and evidence.

@@ -37,6 +37,12 @@ Cross-tool agent guidance for repository review, platform design, federal compli
 - **nist-compliance-evaluator** — FedRAMP, FISMA, NIST 800-53, 800-37, 800-207, 800-190, 800-171, CIS
 - **aws-federal-grade-checklist** — AWS federal-grade validation
 - **aws-platform-review**, **azure-platform-review**, **gcp-platform-review** — Cloud Well-Architected
+- **supply-chain-sbom** — SBOM, provenance, attestation, dependency pinning, vulnerability scanning
+- **container-security** — NIST 800-190; image, registry, runtime, orchestration
+- **dod-zero-trust** — DoD Zero Trust Strategy 7-pillar assessment
+- **solution-discovery** — Discovery workflow; question bank; assumptions, constraints, risk indicators
+- **observability-review** — Logs, metrics, traces, alerting, dashboards, runbooks
+- **terraform-iac** — Terraform for AWS/EKS: state security, pinning, tfsec/Checkov, EKS patterns
 
 ## Commands
 

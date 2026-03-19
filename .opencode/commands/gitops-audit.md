@@ -38,7 +38,7 @@ Audit GitOps, CI/CD, IaC, observability, and platform engineering maturity. Eval
 ## Routing
 
 - **Agent:** gitops-reviewer
-- **Skills:** gitops-capability-audit, well-architected-review
+- **Skills:** gitops-capability-audit, well-architected-review, supply-chain-sbom, observability-review; terraform-iac (if Terraform)
 - **Tools (future):** evidence-extractor, review-score
 
 ## Output Contract

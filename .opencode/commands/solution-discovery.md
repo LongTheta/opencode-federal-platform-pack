@@ -39,7 +39,7 @@ Ask clarifying questions about requirements, budget, timeline, users, compliance
 ## Routing
 
 - **Agent:** solution-architect
-- **Skills:** —
+- **Skills:** solution-discovery
 - **Context:** solution-discovery-question-bank.md
 
 ## Output Contract

@@ -2,6 +2,8 @@
 
 **OpenCode pack for platform engineering and federal-aligned assessment.** Evidence-based reviews, GitOps audits, FedRAMP/FISMA/NIST readiness checks, and pre-push quality enforcement.
 
+**What we do:** We help teams assess repositories and platforms for federal compliance (FedRAMP, FISMA, NIST 800-53, DoD Zero Trust, DoD DevSecOps), run GitOps maturity audits, and enforce quality gates before push. All outputs are structured (JSON schemas)—no free-form reports. We require evidence citations and never claim certification.
+
 ---
 
 ## At a Glance
@@ -10,7 +12,7 @@
 |------|-------|
 | **Commands** | 27 |
 | **Agents** | 19 |
-| **Skills** | 10 |
+| **Skills** | 16 |
 | **Schemas** | review-score, quality-gate, compliance-report |
 
 **Focus:** Platform engineering, DevSecOps, federal compliance (FedRAMP, FISMA, NIST 800, DoD Zero Trust, DoD DevSecOps). Not a generic AI pack—evidence required, no certification claims.
@@ -118,7 +120,7 @@ Assessments align to these frameworks. Outputs use **readiness**, **gap**, **par
 
 **Agents:** repo-auditor, federal-security-reviewer, gitops-reviewer, solution-architect, planner, architect, code-reviewer, security-reviewer, tdd-guide, build-error-resolver, e2e-runner, doc-updater, refactor-cleaner, go-reviewer, go-build-resolver, database-reviewer, cloud-platform-reviewer, documentation-writer, product-manager-discovery
 
-**Skills:** well-architected-review, federal-platform-review, nist-compliance-evaluator, gitops-capability-audit, aws-federal-grade-checklist, aws/azure/gcp-platform-review, tdd-workflow, security-review
+**Skills:** well-architected-review, federal-platform-review, nist-compliance-evaluator, gitops-capability-audit, aws-federal-grade-checklist, aws/azure/gcp-platform-review, supply-chain-sbom, container-security, dod-zero-trust, solution-discovery, observability-review, terraform-iac, tdd-workflow, security-review
 
 ---
 
@@ -194,6 +196,24 @@ CI (`.gitlab-ci.yml`): lint, npm audit, verify, tests, schema validation. Kaniko
 | Security | Optional | Plugin blocks; quality-gate blocks push |
 | Output | Free-form | Structured schemas |
 | Compliance | Vague | FedRAMP, FISMA, NIST, DoD; no certification claims |
+
+---
+
+## Inspiration & How We Differ from Everything Claude Code
+
+This pack was inspired by [Everything Claude Code](https://github.com/affaan-m/everything-claude-code) (ECC)—the agent harness performance optimization system for Claude Code, Codex, OpenCode, and Cursor.
+
+| Aspect | Everything Claude Code | This pack |
+|--------|------------------------|-----------|
+| **Scope** | General software development across many languages and frameworks | Platform engineering and federal compliance only |
+| **Focus** | Harness performance, token optimization, memory, continuous learning, broad dev workflows | Repo assessment, federal checklist, GitOps audit, quality gate, solution discovery |
+| **Skills** | 108+ skills (Django, Laravel, Spring Boot, frontend, backend, TDD, etc.) | 16 skills (well-architected, federal-platform-review, NIST, GitOps, supply-chain, container, DoD ZT, solution-discovery, observability, terraform-iac, cloud platform) |
+| **Output** | Free-form; varies by command | Structured JSON only (review-score, quality-gate, compliance-report schemas) |
+| **Compliance** | General security (OWASP, AgentShield) | FedRAMP, FISMA, NIST 800-53, DoD ZT, DoD DevSecOps—readiness mapping, no certification claims |
+| **Evidence** | Not required | Required—file/config citations; missing evidence flagged |
+| **Primary harness** | Claude Code (with Cursor, Codex, OpenCode support) | OpenCode-first (with Cursor rules) |
+
+**Use ECC when:** You need broad development workflows, multi-language support, and harness optimization. **Use this pack when:** You need federal compliance mapping, GitOps maturity audits, platform architecture reviews, or evidence-based readiness assessments for government/DoD work.
 
 ---
 

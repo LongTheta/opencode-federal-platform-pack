@@ -36,7 +36,7 @@ Produce federal compliance checklist. **Federally focused** on FedRAMP, FISMA, N
 ## Routing
 
 - **Agent:** federal-security-reviewer
-- **Skills:** federal-platform-review, nist-compliance-evaluator, well-architected-review; aws-federal-grade-checklist (if AWS)
+- **Skills:** federal-platform-review, nist-compliance-evaluator, well-architected-review, supply-chain-sbom, container-security, dod-zero-trust; terraform-iac (if Terraform); aws-federal-grade-checklist (if AWS)
 - **Tools (future):** evidence-extractor, federal-control-mapper, review-score
 
 ## Output Contract

@@ -1,38 +1,62 @@
 ---
-description: Federal compliance checklist (NIST, FedRAMP, FISMA, DoD)
+description: Federal compliance checklist — NIST, FedRAMP, FISMA, DoD
 agent: federal-security-reviewer
 ---
 
-# Federal Checklist
+# /federal-checklist
 
-**Purpose:** Produce a federal-grade compliance checklist. Map observable artifacts to NIST 800-53 control families. Identify gaps with evidence. Prioritize remediation. Think like a federal compliance specialist. Federal-grade review depth.
+## Intent
 
-**When to use:** Preparing for ATO, FedRAMP assessment, FISMA alignment, or DoD-style review; federal/regulated repository assessment.
+Produce federal compliance checklist. Map repo artifacts to NIST 800-53 control families. Identify gaps with evidence. No certification claims.
 
-**Required inputs:** Repository context (current workspace or specified path).
+## When to Run
 
-**Optional inputs:** Target baseline (FedRAMP Moderate/High, DoD IL); known control mappings; cloud provider (AWS, Azure, GCP).
+- Preparing for federal customer deployment
+- FedRAMP, FISMA, or DoD alignment needed
+- After repo-assess when baseline is known
 
-**Workflow:**
-1. Gather observable artifacts (IaC, Terraform, configs, pipelines, deployment manifests).
-2. Map artifacts to NIST 800-53 control families (AC, AU, IA, SC, SI, CM, CP, IR, etc.).
-3. Evaluate Security, Reliability, Observability, Deployment safety, Cost, Operations.
-4. Identify gaps: missing or weak controls with evidence.
-5. Prioritize findings by risk and ATO impact.
-6. Produce control mapping table, findings, and remediation roadmap.
+## Required Context
 
-**Expected output format:** Use schemas/compliance-report.json and schemas/well-architected-score.json.
-- Executive summary (compliance posture, critical gaps)
-- Architecture Score (0–10 per category)
-- Control mapping table: Control ID | Status (Met/Partial/Gap) | Evidence | Gap description
-- Findings: ID | Severity | Control | Evidence | Remediation
-- Key Risks, Evidence Found, Missing Evidence
-- Remediation roadmap: phased actions with dependencies
+- Repository workspace
+- Prior repo-assess output (optional but helpful)
 
-**Guardrails:**
-- Every finding cites specific files, configs, or patterns.
-- Reference control IDs (e.g., AC-2, SC-7) when applicable.
-- Do not claim compliance; identify gaps and recommend verification.
-- Remediation steps must be concrete and implementable.
+## Questions to Ask
 
-**Definition of done:** Control mapping table complete; all findings have evidence and remediation; roadmap is prioritized and actionable.
+- Which control families are in scope?
+- AWS, Azure, or GCP? (affects aws-federal-grade-checklist)
+- What evidence exists for identity, encryption, audit?
+
+## Steps
+
+1. Evidence extraction — repo artifacts
+2. Control-family mapping — NIST 800-53
+3. Readiness report — gaps, evidence, remediation
+4. Produce review-score + compliance extension
+
+## Routing
+
+- **Agent:** federal-security-reviewer
+- **Skills:** federal-platform-review, nist-compliance-evaluator, well-architected-review; aws-federal-grade-checklist (if AWS)
+- **Tools (future):** evidence-extractor, federal-control-mapper, review-score
+
+## Output Contract
+
+- **Primary schema:** schemas/review-score.schema.json
+- **Extension:** schemas/compliance-report.json (control mapping)
+- **Required:** review_target, summary, categories, findings, top_priorities; control mapping; gaps; remediation roadmap
+
+## Quality Bar
+
+- No "compliant" or "certified" claims
+- Use "readiness," "gap," "partial," "evidence not found"
+- All gaps have evidence or missing_evidence
+
+## Exit Criteria
+
+- Control mapping complete
+- Gaps with evidence
+- Remediation roadmap
+
+## Blocking Conditions
+
+None.

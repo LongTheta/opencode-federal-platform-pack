@@ -3,37 +3,61 @@ description: Platform architecture design with tradeoffs and cloud alignment
 agent: solution-architect
 ---
 
-# Platform Design
+# /platform-design
 
-**Purpose:** Design platform architecture for the given context. Consider scalability, reliability, security, cost, and operational excellence. Present options with tradeoffs. Align with AWS, Azure, or GCP Well-Architected where applicable. Think like a senior solution architect.
+## Intent
 
-**When to use:** Designing or evolving platform architecture; evaluating cloud options; pre-implementation design review.
+Design platform architecture from constraints. Present 1–3 options with tradeoffs, risks, and evidence. Flag designs that would fail Well-Architected review.
 
-**Required inputs:** Context or design brief. Provide via arguments: $ARGUMENTS
+## When to Run
 
-**Optional inputs:** Cloud provider(s) (AWS, Azure, GCP); compliance requirements; existing constraints; Terraform/IaC preferences.
+- After solution-discovery when constraints are known
+- When migrating or redesigning architecture
+- As part of orchestrate → solution-discovery → platform-design
 
-**Workflow:**
-1. Parse the design context and constraints.
-2. Identify key non-functional requirements (scale, reliability, security, cost, observability).
-3. Propose 1–3 architecture options with pros, cons, and conditions.
-4. Map to cloud Well-Architected pillars (AWS, Azure, GCP) where applicable.
-5. Surface risks, assumptions, and recommended approach.
-6. Include observability, CI/CD, and documentation considerations.
+## Required Context
 
-**Expected output format:**
-- Problem statement and constraints
-- Architecture options (1–3) with pros, cons, conditions
-- Architecture Score (0–10 per pillar) where applicable
-- Cloud alignment (Well-Architected pillars where relevant)
-- Key Risks, Evidence Found, Missing Evidence
-- Risks and assumptions
-- Recommended approach and rationale
+- Constraints from $ARGUMENTS or prior discovery
+- instructions/aws-derived-principles.md
 
-**Guardrails:**
-- Present options with tradeoffs; avoid single-option prescriptions.
-- Evidence-based; ground in stated requirements.
-- Compliance-aware when federal/regulated context is indicated.
-- If a design would fail a Well-Architected review, flag it.
+## Questions to Ask
 
-**Definition of done:** At least one architecture option with tradeoffs; risks and assumptions surfaced; recommendation with rationale.
+- What are the scale, compliance, and cost constraints?
+- What is the failure tolerance?
+- Single cloud or multi-cloud?
+- Event-driven vs request-response?
+
+## Steps
+
+1. Discovery — constraints from context
+2. Constraints synthesis — scale, compliance, cost
+3. Reference architecture — 1–3 options
+4. Decision log — tradeoffs, risks
+5. Flag Well-Architected failures
+
+## Routing
+
+- **Agent:** solution-architect
+- **Skills:** aws-derived-principles
+- **Tools (future):** target-architecture-synthesizer
+
+## Output Contract
+
+- **Format:** Executive Summary, Architecture Score (0–10 per pillar), Key Risks, Evidence/Missing Evidence, Recommended Actions
+- **Required:** 1–3 options with pros/cons; risks documented; evidence or missing_evidence
+
+## Quality Bar
+
+- Each option has tradeoffs
+- If design would fail Well-Architected review, flag it
+- Observability, auditability, scalability, failure handling required
+
+## Exit Criteria
+
+- 1–3 options with tradeoffs
+- Risks and evidence documented
+- Decision log present
+
+## Blocking Conditions
+
+None.

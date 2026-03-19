@@ -2,9 +2,10 @@
 
 ## Installation
 
-1. Clone or copy this repository.
-2. **Option A — Project-local:** Copy `.opencode/` into your project root.
-3. **Option B — Config dir:** Set `OPENCODE_CONFIG_DIR` to this pack's root.
+See [INSTALL.md](../INSTALL.md) for the full guide. Summary:
+
+1. **Plugin only** — Copy `federal-platform-enforcement.js` into `.opencode/plugins/` for enforcement without commands.
+2. **Full catalog** — Copy `.opencode/` and supporting dirs, or set `OPENCODE_CONFIG_DIR` to this pack's root.
 
 ## Config
 
@@ -20,6 +21,10 @@
 | `/federal-checklist` | Federal compliance checklist (NIST, FedRAMP, FISMA, DoD) |
 | `/gitops-audit` | GitOps, CI/CD, observability maturity |
 | `/quality-gate` | Pre-push gate: evidence, security, docs, supply chain |
+| `/doc-sync` | Identify documentation drift; propose doc updates |
+| `/verify` | Quick verification: quality-gate checks and status |
+| `/checkpoint` | Capture session state and next steps for handoff |
+| `/orchestrate` | Plan multi-step workflow (review → design → federal check) |
 
 ## Examples
 
@@ -58,5 +63,6 @@ Loaded via `opencode.json`. Enforce evidence-first, push verification, docs, sec
 
 ## Plugins
 
+- **Federal platform enforcement** — Blocks .env reads, dangerous bash; warns on secrets in edits, git push; supply-chain reminders
 - **Pre-merge quality** — Warnings for README, .gitignore, lock files, CI config
 - **Supply-chain guard** — Reminders when editing Dockerfile, package.json, pipelines

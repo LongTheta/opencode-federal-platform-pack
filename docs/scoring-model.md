@@ -90,6 +90,17 @@ Each category must include:
 
 ---
 
+## Commands Using This Model
+
+| Command | Output |
+|---------|--------|
+| /repo-assess | review-score.schema.json |
+| /gitops-audit | review-score.schema.json (GitOps capabilities mapped to categories) |
+| /federal-checklist | review-score.schema.json + compliance-report extension |
+| /verify | quality-gate.schema.json (verdict); may include score summary |
+
+---
+
 ## Schema Reference
 
 See `schemas/review-score.schema.json` for the full JSON schema. Use it to validate review outputs and support automation.

@@ -1,0 +1,43 @@
+{
+  "name": "opencode-federal-platform-pack",
+  "version": "0.3.0",
+  "description": "OpenCode platform engineering pack: repo review, solution architect discovery, federal checklist, GitOps audit, quality gate. Plugin-driven enforcement.",
+  "keywords": [
+    "opencode",
+    "platform-engineering",
+    "devsecops",
+    "federal",
+    "nist",
+    "well-architected",
+    "quality-gate"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LongTheta/opencode-federal-platform-pack.git"
+  },
+  "files": [
+    ".opencode",
+    "skills",
+    "schemas",
+    "contexts",
+    "rules",
+    "docs",
+    "examples",
+    "INSTALL.md",
+    "llms.txt"
+  ],
+  "opencode": {
+    "plugin": ".opencode/plugins/federal-platform-enforcement.js"
+  },
+  "scripts": {
+    "validate:review-score": "node scripts/validate-schema.js review-score",
+    "validate:quality-gate": "node scripts/validate-schema.js quality-gate",
+    "verify": "node scripts/verify-pack.js",
+    "test": "node --test tests/"
+  },
+  "devDependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1"
+  }
+}

@@ -3,32 +3,62 @@ description: Solution architect discovery — requirements, budget, constraints,
 agent: solution-architect
 ---
 
-# Solution Discovery
+# /solution-discovery
 
-**Purpose:** Conduct solution architect and product manager discovery. Ask clarifying questions about requirements, budget, timeline, users, compliance, and integrations. Produce a discovery summary with open questions and next steps. Think like a senior solution architect and product manager.
+## Intent
 
-**When to use:** Starting a new initiative, migration, or platform effort; before design or implementation; when scope is vague.
+Ask clarifying questions about requirements, budget, timeline, users, compliance, and integrations. Produce discovery summary with assumptions, constraints, and open questions.
 
-**Required inputs:** Context or problem statement. Provide via arguments: $ARGUMENTS
+## When to Run
 
-**Optional inputs:** Known constraints; compliance regime (FedRAMP, FISMA, DoD); cloud provider preferences (AWS, Azure, GCP); existing tech stack.
+- Before platform-design when requirements are vague
+- At start of new project or migration
+- When stakeholder context is missing
 
-**Workflow:**
-1. Parse the provided context and problem statement.
-2. Identify what is known vs. unknown.
-3. Ask clarifying questions: requirements, budget, timeline, users, compliance, integrations, scale.
-4. Synthesize constraints: technical, organizational, regulatory.
-5. Produce discovery summary, open questions, and recommended next steps.
+## Required Context
 
-**Expected output format:**
-- Discovery summary (what we know, what we need to clarify)
-- Open questions (prioritized)
-- Constraints (technical, budget, compliance, timeline)
-- Recommended next steps (design phases, spikes, decisions)
+- Goal or problem statement ($ARGUMENTS)
+- Access to contexts/solution-discovery-question-bank.md
 
-**Guardrails:**
-- Ask before assuming; do not fill gaps with assumptions.
-- Ground recommendations in stated requirements and constraints.
-- When federal/regulated context is indicated, factor in NIST, FedRAMP, FISMA, DoD.
+## Questions to Ask
 
-**Definition of done:** Discovery summary complete; open questions listed and prioritized; next steps are actionable.
+- Who are the users? What scale?
+- What compliance (FedRAMP, NIST, HIPAA)?
+- Budget and timeline constraints?
+- Integrations and dependencies?
+- Failure tolerance (RTO/RPO)?
+
+## Steps
+
+1. Parse goal from $ARGUMENTS
+2. Ask clarifying questions (from question bank)
+3. Synthesize assumptions and constraints
+4. Produce discovery summary with open questions
+5. Recommend next steps
+
+## Routing
+
+- **Agent:** solution-architect
+- **Skills:** —
+- **Context:** solution-discovery-question-bank.md
+
+## Output Contract
+
+- **Format:** Structured markdown
+- **Required:** Discovery summary, assumptions, constraints, open questions, recommended next steps
+
+## Quality Bar
+
+- No design recommendations yet; discovery only
+- Assumptions explicitly stated
+- Open questions listed for stakeholder
+
+## Exit Criteria
+
+- Discovery summary complete
+- Assumptions and constraints documented
+- Open questions identified
+
+## Blocking Conditions
+
+None.

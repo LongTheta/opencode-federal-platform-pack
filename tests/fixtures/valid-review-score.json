@@ -1,0 +1,47 @@
+{
+  "review_target": {
+    "name": "test-repo",
+    "type": "repository",
+    "scope": "."
+  },
+  "summary": {
+    "final_score": 7.2,
+    "letter_grade": "C",
+    "confidence": "medium",
+    "production_readiness": "conditionally_ready"
+  },
+  "categories": {
+    "security": {
+      "score": 6,
+      "weight": 0.25,
+      "rationale": "Secrets in env; no SBOM"
+    },
+    "reliability": {
+      "score": 8,
+      "weight": 0.2,
+      "rationale": "Health checks present"
+    },
+    "performance": {
+      "score": 7.5,
+      "weight": 0.15,
+      "rationale": "Pooling configured"
+    },
+    "cost_awareness": {
+      "score": 6.5,
+      "weight": 0.1,
+      "rationale": "Tags missing"
+    },
+    "operational_excellence": {
+      "score": 8.5,
+      "weight": 0.3,
+      "rationale": "CI/CD present"
+    }
+  },
+  "findings": {
+    "critical": [],
+    "high": [{"title": "Pin base image", "severity": "high"}],
+    "medium": [],
+    "low": [],
+    "informational": []
+  }
+}

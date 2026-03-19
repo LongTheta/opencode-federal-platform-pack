@@ -1,7 +1,7 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "name": "opencode-federal-platform-pack",
-  "description": "OpenCode-first platform engineering pack: repo review, solution architect discovery, platform design, federal checklist, GitOps audit, quality gate.",
+  "description": "OpenCode platform pack: repo review, solution architect discovery, platform design, GitOps audit, federal checklist, quality gate. Executable, evidence-based, enterprise-grade.",
 
   "instructions": [
     "instructions/aws-derived-principles.md",
@@ -52,44 +52,71 @@
       "temperature": 0.1
     },
     "cloud-platform-reviewer": {
-      "description": "Evaluates cloud repos for AWS, Azure, GCP Well-Architected best practices",
+      "description": "Evaluates AWS, Azure, GCP Well-Architected best practices",
       "mode": "subagent",
       "prompt": "{file:prompts/agents/cloud-platform-reviewer.md}",
       "tools": { "write": false, "edit": false },
       "temperature": 0.1
+    },
+    "documentation-writer": {
+      "description": "Identifies documentation drift; proposes doc updates to match code/config/deploy",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/documentation-writer.md}",
+      "tools": { "write": false, "edit": false },
+      "temperature": 0.2
     }
   },
 
   "command": {
     "repo-assess": {
       "description": "Full repository assessment: architecture, security, deployment readiness",
-      "template": "Perform a comprehensive repository assessment. Use skills/well-architected-review. Evaluate: Security posture, Reliability/failure modes, Observability coverage, Deployment safety, Cost awareness, Operational readiness. For each: identify gaps, classify severity (Critical/High/Medium/Low), recommend fixes. Output: Use schemas/review-score.schema.json. Include review_target, summary (final_score, letter_grade, confidence, production_readiness), categories (security 0.25, reliability 0.20, performance 0.15, cost_awareness 0.10, operational_excellence 0.30) with score, rationale, evidence_found, missing_evidence, risks, recommended_actions per category, findings by severity, top_priorities with owner_hint.",
+      "template": "Perform a comprehensive repository assessment. Use skills/well-architected-review. Workflow: (1) repo discovery — structure, entry points, tech stack; (2) architecture inference — components, dependencies; (3) security review — secrets, deps, supply chain; (4) observability review — logs, metrics, health; (5) scoring engine — 0–10 per category; (6) final report. Output: schemas/review-score.schema.json. Categories: security 0.25, reliability 0.20, performance 0.15, cost_awareness 0.10, operational_excellence 0.30. Include: review_target, summary (final_score, letter_grade, confidence, production_readiness), categories with score, rationale, evidence_found, missing_evidence, risks, recommended_actions, findings by severity, top_priorities. Blocking: none. Definition of done: report conforms to schema; all findings cite evidence or state missing_evidence.",
       "agent": "repo-auditor"
     },
     "solution-discovery": {
       "description": "Solution architect discovery: requirements, budget, constraints, compliance",
-      "template": "Conduct solution architect discovery. Use contexts/solution-discovery-question-bank.md. Ask clarifying questions about requirements, budget, timeline, users, compliance, and integrations. Produce discovery summary with open questions and recommended next steps. Context: $ARGUMENTS",
+      "template": "Conduct solution architect discovery. Use contexts/solution-discovery-question-bank.md. Ask clarifying questions about requirements, budget, timeline, users, compliance, and integrations. Produce discovery summary with open questions and recommended next steps. Output: structured markdown. Blocking: none. Definition of done: discovery summary with assumptions, constraints, open questions. Context: $ARGUMENTS",
       "agent": "solution-architect"
     },
     "platform-design": {
       "description": "Platform architecture design with tradeoffs and cloud alignment",
-      "template": "Design platform architecture for the given context. Use instructions/aws-derived-principles.md. Consider: Security, Reliability, Performance, Cost, Operational excellence. Require: observability, auditability, scalability, failure handling, documentation. Present 1–3 options with tradeoffs. If a design would fail a Well-Architected review, flag it. Output: Executive Summary, Architecture Score (0–10 per pillar), Key Risks, Evidence/Missing Evidence, Recommended Actions. Context: $ARGUMENTS",
+      "template": "Design platform architecture. Use instructions/aws-derived-principles.md. Workflow: (1) discovery — constraints from context; (2) constraints synthesis — scale, compliance, cost; (3) reference architecture — 1–3 options; (4) decision log — tradeoffs, risks. Output: Executive Summary, Architecture Score (0–10 per pillar), Key Risks, Evidence/Missing Evidence, Recommended Actions. If design would fail Well-Architected review, flag it. Blocking: none. Definition of done: 1–3 options with tradeoffs; risks and evidence documented. Context: $ARGUMENTS",
       "agent": "solution-architect"
     },
     "federal-checklist": {
       "description": "Federal compliance checklist (NIST, FedRAMP, FISMA, DoD)",
-      "template": "Produce a federal compliance checklist. Use skills/federal-platform-review, skills/nist-compliance-evaluator, and skills/well-architected-review. For AWS repos, also use skills/aws-federal-grade-checklist. Evaluate: Security posture, Reliability, Observability, Deployment safety, Cost awareness, Operational readiness. Map to NIST 800-53 control families. Identify gaps with evidence. Output: Executive Summary, Architecture Score (0–10 per category), Control mapping, Key Risks, Evidence Found, Missing Evidence, Remediation roadmap. Use schemas/compliance-report.json and schemas/well-architected-score.json.",
+      "template": "Produce federal compliance checklist. Use skills/federal-platform-review, skills/nist-compliance-evaluator, skills/well-architected-review; for AWS also skills/aws-federal-grade-checklist. Workflow: (1) evidence extraction — repo artifacts; (2) control-family mapping — NIST 800-53; (3) readiness report — gaps, evidence, remediation. Output: schemas/review-score.schema.json (primary) and schemas/compliance-report.json. Include: review_target, summary, categories, findings, top_priorities; control mapping in compliance extension. Blocking: none. Definition of done: control mapping; gaps with evidence; remediation roadmap. No certification claims.",
       "agent": "federal-security-reviewer"
     },
     "gitops-audit": {
       "description": "GitOps, CI/CD, and platform engineering maturity audit",
-      "template": "Audit GitOps, CI/CD, IaC, observability, and platform engineering maturity. Use skills/gitops-capability-audit and skills/well-architected-review. Evaluate 7 capability areas: CI/CD orchestration, GitOps and config-as-code, security scanning and supply chain, promotion and release governance, observability, identity and secrets, policy-as-code. Identify gaps, classify severity, recommend remediation. Output: Executive Summary, findings by capability, Evidence Found, Missing Evidence, Remediation roadmap. Use capability-model.md for good/weak/anti-patterns.",
+      "template": "Audit GitOps, CI/CD, IaC, observability. Use skills/gitops-capability-audit, skills/well-architected-review. Evaluate 7 capability areas: CI/CD orchestration, GitOps and config-as-code, security scanning and supply chain, promotion and release governance, observability, identity and secrets, policy-as-code. Output: schemas/review-score.schema.json. Include: review_target, summary, categories (map GitOps capabilities to Well-Architected pillars), findings by severity, top_priorities. Blocking: none. Definition of done: findings per capability; evidence; remediation roadmap.",
       "agent": "gitops-reviewer"
     },
     "quality-gate": {
-      "description": "Pre-push quality gate: evidence, security, docs, supply chain, Well-Architected",
-      "template": "Run pre-push quality gate. Use docs/quality-gate-workflow.md and schemas/quality-gate.schema.json. FAIL if: no observability, no access control model, no deployment safety, no documentation for major components, no recovery strategy. WARN if: cost visibility missing, scaling unclear, tagging missing. Also check: evidence-based recommendations, no security shortcuts, docs updated with code changes, supply-chain controls for build/deploy. Report pass / pass with warnings / fail with blocking findings.",
+      "description": "Pre-push quality gate: evidence, security, docs, supply chain",
+      "template": "Run pre-push quality gate. Use docs/quality-gate-workflow.md, plugins/governance-plugin/rules-map.md, schemas/quality-gate.schema.json. FAIL if: plaintext secrets; :latest in prod; disabled TLS/permissive IAM; dep/CI/container/IaC change without security review; dep change without lock file; meaningful code/config/deploy change without doc update; recommendation without evidence. WARN if: new code without tests; architecture change without ADR; runbook not updated; behavior change without CHANGELOG; cloud resources without tags. Output: verdict (pass | pass_with_warnings | fail), blockers, warnings, informational, required_actions. Blocking: verdict fail blocks push readiness. Definition of done: verdict and findings conform to schema.",
       "agent": "repo-auditor"
+    },
+    "doc-sync": {
+      "description": "Identify documentation drift; propose doc updates to match code/config/deploy",
+      "template": "Identify documentation drift. Use skills/well-architected-review for context; instructions/documentation-rules.md. Compare README, runbooks, architecture docs against code, config, IaC, CI. Output: drift report — file, section, drift type (outdated, missing, contradictory); proposed updates — file, section, proposed change, rationale; priority (critical, high, medium, low). Blocking: none. Definition of done: drift report with proposed updates; no implementation. Context: $ARGUMENTS",
+      "agent": "documentation-writer"
+    },
+    "verify": {
+      "description": "Quick verification: quality-gate checks and status",
+      "template": "Run verification checks. Use docs/quality-gate-workflow.md, schemas/quality-gate.schema.json. Focused pass: (1) staged/unstaged changes; (2) security — secrets, :latest, lock files; (3) docs for meaningful changes; (4) evidence citations in review output. Output: verdict (pass | pass_with_warnings | fail), blockers, warnings, next steps. Be concise. Blocking: verdict fail blocks push readiness. Definition of done: verdict and findings.",
+      "agent": "repo-auditor"
+    },
+    "checkpoint": {
+      "description": "Capture session state, decisions, and next steps for handoff",
+      "template": "Create checkpoint for session handoff. Summarize: (1) current task and status; (2) key decisions made; (3) files modified or in progress; (4) blockers or dependencies; (5) recommended next steps. Output: structured markdown for new agent or human. Blocking: none. Definition of done: checkpoint with all five sections. Context: $ARGUMENTS",
+      "agent": "solution-architect"
+    },
+    "orchestrate": {
+      "description": "Plan multi-step workflow (review → design → federal check) with dependencies",
+      "template": "Orchestrate multi-step platform engineering workflow. Given the goal, produce ordered plan with steps, dependencies, suggested commands. Example flows: repo-assess → platform-design → federal-checklist; solution-discovery → platform-design → quality-gate; gitops-audit → repo-assess → quality-gate. For each step: command, inputs, expected output, next-step trigger. Output: numbered plan with dependencies. Blocking: none. Definition of done: plan with at least 2 steps. Goal: $ARGUMENTS",
+      "agent": "solution-architect"
     }
   },
 

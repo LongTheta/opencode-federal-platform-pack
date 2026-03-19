@@ -1,34 +1,66 @@
 ---
-description: Pre-merge quality gate — evidence, security, docs, supply chain, Well-Architected
+description: Pre-push quality gate — evidence, security, docs, supply chain
 agent: repo-auditor
 ---
 
-# Quality Gate
+# /quality-gate
 
-**Purpose:** Run pre-merge quality gate. Check: evidence-based recommendations, no security shortcuts, docs updated with code changes, supply-chain controls for build/deploy, Well-Architected requirements. Report pass/fail with blocking findings. Think like a senior engineer enforcing merge readiness.
+## Intent
 
-**When to use:** Before push or merge; as a gate in PR review; before release.
+Run pre-push quality gate. Check evidence, security, docs, supply chain, Well-Architected requirements. Produce verdict: pass | pass with warnings | fail.
 
-**Required inputs:** Repository context (current workspace); recent or staged changes if available.
+## When to Run
 
-**Optional inputs:** Stricter mode (fail on Medium findings); federal context (add compliance checks).
+- Before push or merge
+- As gate in PR review
+- Before release
+- When user asks "ready to push?"
 
-**Workflow:**
-1. Review recent or staged changes (build, deploy, config, dependencies).
-2. Check evidence: recommendations cite specific files/configs.
-3. Check security: no plaintext secrets, no disabled TLS, no overly permissive IAM, no `:latest` in production.
-4. Check docs: README, runbooks, architecture docs updated with code changes.
-5. Check supply chain: pinned deps, SBOM/provenance where applicable, no floating tags.
-6. Check Well-Architected: observability, access control, deployment safety, documentation, recovery strategy.
-7. Produce pass/fail verdict with blocking findings.
+## Required Context
 
-**Expected output format:** Use schemas/quality-gate.schema.json. Verdict: pass | pass_with_warnings | fail. See docs/quality-gate-workflow.md for check categories.
+- Repository workspace
+- Staged or recent changes (git diff)
+- docs/quality-gate-workflow.md, .opencode/plugins/governance-plugin/rules-map.md
 
-**Guardrails:**
-- FAIL if: no observability, no access control model, no deployment safety, no documentation for major components, no recovery strategy.
-- WARN if: cost visibility missing, scaling unclear, tagging missing.
-- Fail on any High-severity finding that affects merge readiness.
-- Security before convenience; no shortcuts.
-- Supply-chain review required for build/deploy changes.
+## Questions to Ask
 
-**Definition of done:** Clear pass/fail verdict; all blocking findings listed with required actions; checklist completed.
+- What files changed? (trigger patterns)
+- Are there plaintext secrets?
+- Is :latest used in production path?
+- Are docs updated for meaningful changes?
+- Do recommendations cite evidence?
+
+## Steps
+
+1. Gather changed files (git diff --staged or git diff)
+2. Classify changes to trigger categories
+3. Run checks per rules-map
+4. Classify findings: block | warn | info
+5. Compute verdict
+6. Produce report
+
+## Routing
+
+- **Agent:** repo-auditor
+- **Skills:** quality-gate-workflow
+- **Tools (future):** quality-gate-check
+
+## Output Contract
+
+- **Schema:** schemas/quality-gate.schema.json
+- **Required:** verdict, blockers, warnings, informational, required_actions
+
+## Quality Bar
+
+- FAIL if any block finding
+- WARN if any warn finding
+- Use rules-map as single source of truth
+
+## Exit Criteria
+
+- Verdict and findings conform to schema
+- All blocking findings listed with required actions
+
+## Blocking Conditions
+
+- **Verdict fail blocks push readiness.** User must not push until blockers resolved.

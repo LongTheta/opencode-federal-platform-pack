@@ -2,7 +2,10 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://opencode-federal-platform-pack/schemas/platform-review-report.json",
   "title": "Platform Review Report",
-  "description": "Structured output for repository, service, platform, or architecture review. Weighted category scores, findings by severity, top priorities.",
+  "description": "DEPRECATED: Use review-score.schema.json instead. Structured output for repository, service, platform, or architecture review. Weighted category scores, findings by severity, top priorities.",
+  "x-deprecated": true,
+  "x-deprecated-since": "0.3.0",
+  "x-replace-with": "review-score.schema.json",
   "type": "object",
   "required": ["review_target", "summary", "category_scores", "findings"],
   "properties": {

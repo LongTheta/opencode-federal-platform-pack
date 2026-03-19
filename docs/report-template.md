@@ -2,6 +2,8 @@
 
 Use this template for full and concise review outputs. Replace placeholders with actual content.
 
+**Schema:** `schemas/review-score.schema.json` — Use for /repo-assess, /gitops-audit, /federal-checklist.
+
 ---
 
 ## Full Report Template

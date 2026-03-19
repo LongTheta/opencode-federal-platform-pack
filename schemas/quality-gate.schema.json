@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://opencode-federal-platform-pack/schemas/quality-gate.schema.json",
+  "title": "Quality Gate Report",
+  "description": "Schema for pre-push quality gate output",
+  "type": "object",
+  "required": ["verdict", "timestamp", "checks"],
+  "properties": {
+    "verdict": {
+      "type": "string",
+      "enum": ["pass", "pass_with_warnings", "fail"],
+      "description": "Overall gate result. pass: no blockers or warnings. pass_with_warnings: no blockers, has warnings. fail: one or more blockers."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the gate was run"
+    },
+    "push_ready": {
+      "type": "boolean",
+      "description": "True if verdict is pass or pass_with_warnings. False if fail."
+    },
+    "checks": {
+      "type": "object",
+      "description": "Results per check category",
+      "properties": {
+        "tests": { "$ref": "#/definitions/checkResult" },
+        "documentation": { "$ref": "#/definitions/checkResult" },
+        "security": { "$ref": "#/definitions/checkResult" },
+        "architecture": { "$ref": "#/definitions/checkResult" },
+        "changelog": { "$ref": "#/definitions/checkResult" },
+        "ownership_tagging": { "$ref": "#/definitions/checkResult" },
+        "evidence_strength": { "$ref": "#/definitions/checkResult" }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/finding" },
+      "description": "All findings with classification"
+    },
+    "blockers": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/finding" },
+      "description": "Findings that block push (subset of findings)"
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/finding" },
+      "description": "Findings that warn but do not block (subset of findings)"
+    },
+    "informational": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/finding" },
+      "description": "Informational findings (subset of findings)"
+    },
+    "summary": {
+      "type": "string",
+      "description": "1-2 sentence summary of the verdict"
+    },
+    "required_actions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Concrete actions required before push (when verdict is fail)"
+    }
+  },
+  "definitions": {
+    "checkResult": {
+      "type": "object",
+      "properties": {
+        "triggered": {
+          "type": "boolean",
+          "description": "Whether this check was triggered by the changes"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pass", "warn", "block", "info", "skipped"],
+          "description": "Result of this check"
+        },
+        "message": {
+          "type": "string",
+          "description": "Brief message for this check"
+        }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "required": ["id", "classification", "category", "message"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the finding"
+        },
+        "classification": {
+          "type": "string",
+          "enum": ["block", "warn", "info"],
+          "description": "block: blocks push. warn: warns but allows push. info: informational only."
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "tests",
+            "documentation",
+            "security",
+            "architecture",
+            "changelog",
+            "ownership_tagging",
+            "evidence_strength"
+          ],
+          "description": "Which check category produced this finding"
+        },
+        "message": {
+          "type": "string",
+          "description": "Human-readable finding description"
+        },
+        "evidence": {
+          "type": "string",
+          "description": "File path, line range, or config reference"
+        },
+        "required_action": {
+          "type": "string",
+          "description": "Concrete action to take (for block and warn)"
+        },
+        "trigger_paths": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Paths that triggered this check"
+        }
+      }
+    }
+  }
+}

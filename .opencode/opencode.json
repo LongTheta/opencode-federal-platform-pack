@@ -1,0 +1,92 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "name": "opencode-federal-platform-pack",
+  "description": "OpenCode-first AI engineering pack: repository review + platform/architecture/DevSecOps recommendations, and solution architect + product manager discovery",
+
+  "instructions": [
+    "instructions/core-engineering.md",
+    "instructions/platform-review-standards.md",
+    "instructions/governance-rules.md",
+    "../rules/*.md"
+  ],
+
+  "agent": {
+    "solution-architect": {
+      "description": "Discovery, requirements, constraints, high-level design; asks clarifying questions",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/solution-architect.md}",
+      "tools": { "write": false, "edit": false },
+      "temperature": 0.2
+    },
+    "product-manager-discovery": {
+      "description": "Turns vague ideas into scoped deliverables with acceptance criteria and estimates",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/product-manager-discovery.md}",
+      "tools": { "write": false, "edit": false },
+      "temperature": 0.3
+    },
+    "repo-auditor": {
+      "description": "Reviews repos for architecture, maintainability, security, and deployment readiness",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/repo-auditor.md}",
+      "tools": { "write": false, "edit": false },
+      "temperature": 0.1
+    },
+    "federal-security-reviewer": {
+      "description": "Federal-grade review: NIST 800-53, FedRAMP, FISMA, DoD-style controls",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/federal-security-reviewer.md}",
+      "tools": { "write": false, "edit": false },
+      "temperature": 0.1
+    },
+    "gitops-reviewer": {
+      "description": "Evaluates GitOps, CI/CD, IaC, observability, and platform engineering maturity",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/gitops-reviewer.md}",
+      "tools": { "write": false, "edit": false },
+      "temperature": 0.1
+    },
+    "cloud-platform-reviewer": {
+      "description": "Evaluates cloud repos for AWS, Azure, GCP Well-Architected best practices",
+      "mode": "subagent",
+      "prompt": "{file:prompts/agents/cloud-platform-reviewer.md}",
+      "tools": { "write": false, "edit": false },
+      "temperature": 0.1
+    }
+  },
+
+  "command": {
+    "repo-assess": {
+      "description": "Full repository assessment: architecture, security, deployment readiness",
+      "template": "Perform a comprehensive repository assessment. Assess architecture, maintainability, security, and deployment readiness. Produce evidence-based findings with severity levels (High/Medium/Low). Cite specific files and configs. Use schemas/review-report.json structure.",
+      "agent": "repo-auditor"
+    },
+    "solution-discovery": {
+      "description": "Solution architect discovery: requirements, budget, constraints, compliance",
+      "template": "Conduct solution architect discovery. Use contexts/solution-discovery-question-bank.md. Ask clarifying questions about requirements, budget, timeline, users, compliance, and integrations. Produce discovery summary with open questions and recommended next steps. Context: $ARGUMENTS",
+      "agent": "solution-architect"
+    },
+    "platform-design": {
+      "description": "Platform architecture design with tradeoffs and cloud alignment",
+      "template": "Design platform architecture for the given context. Consider scalability, reliability, security, cost, and operational excellence. Present options with tradeoffs. Align with cloud Well-Architected where applicable. Context: $ARGUMENTS",
+      "agent": "solution-architect"
+    },
+    "federal-checklist": {
+      "description": "Federal compliance checklist (NIST, FedRAMP, FISMA, DoD)",
+      "template": "Produce a federal compliance checklist. Use skills/federal-platform-review. Map observable artifacts to NIST 800-53 control families. Identify gaps with evidence. Prioritize remediation. Output: control mapping table, findings, remediation roadmap. Use schemas/compliance-report.json structure.",
+      "agent": "federal-security-reviewer"
+    },
+    "gitops-audit": {
+      "description": "GitOps, CI/CD, and platform engineering maturity audit",
+      "template": "Audit GitOps, CI/CD, IaC, observability, and platform engineering maturity. Use skills/gitops-maturity. Evaluate pipelines, deployment manifests, supply chain controls. Produce maturity scorecard and prioritized improvement roadmap.",
+      "agent": "gitops-reviewer"
+    },
+    "quality-gate": {
+      "description": "Pre-push quality gate: evidence, security, docs, supply chain",
+      "template": "Run pre-push quality gate. Use docs/quality-gate-workflow.md and schemas/quality-gate.schema.json. Check: evidence-based recommendations, no security shortcuts, docs updated with code changes, supply-chain controls for build/deploy. Report pass / pass with warnings / fail with blocking findings.",
+      "agent": "repo-auditor"
+    }
+  },
+
+  "plugin": []
+}

@@ -1,21 +1,58 @@
 # GitLab CI for opencode-federal-platform-pack
-# Verify stage + Kaniko build
+# Verify stage (parallel jobs) + Kaniko build
 
 stages:
   - verify
   - build
 
-verify:
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+
+.lint_audit_verify_base:
   stage: verify
   image: node:20
-  timeout: 15m
   before_script:
-    - npm ci || npm install
+    - npm ci
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-npm
+    paths:
+      - .npm/
+
+lint:
+  extends: .lint_audit_verify_base
+  timeout: 15m
   script:
     - npm run lint
+
+audit:
+  extends: .lint_audit_verify_base
+  timeout: 15m
+  script:
     - npm audit --audit-level=high
+
+verify:
+  extends: .lint_audit_verify_base
+  timeout: 20m
+  script:
     - npm run verify
-    - npm test
+
+test:unit:
+  extends: .lint_audit_verify_base
+  timeout: 10m
+  script:
+    - npm run test:unit
+
+test:integration:
+  extends: .lint_audit_verify_base
+  timeout: 15m
+  script:
+    - npm run test:integration
+
+test:evidence:
+  extends: .lint_audit_verify_base
+  timeout: 20m
+  script:
+    - npm run test:evidence
 
 # Kaniko build (no Docker daemon required)
 build:

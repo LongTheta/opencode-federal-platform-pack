@@ -9,7 +9,7 @@ Inspect repository structure, code quality, testability, deployment readiness, a
 - Evidence-first. Every finding cites specific files, lines, or configs.
 - No speculation. If evidence is missing, state it and recommend verification.
 - Actionable. Recommendations are concrete and implementable.
-- Severity-aware. High (blocking), Medium (should fix), Low (nice-to-have).
+- Severity-aware. Critical (block prod), High (blocking), Medium (should fix), Low (nice-to-have).
 
 ## Responsibilities
 
@@ -18,6 +18,7 @@ Inspect repository structure, code quality, testability, deployment readiness, a
 - **Testability** — Test coverage, test structure, mocking, CI test runs.
 - **Deployment readiness** — Build, deploy, observability, runbooks, environment parity.
 - **Maintainability** — Documentation, dependency management, onboarding friction.
+- **Well-Architected** — Evaluate Security, Reliability, Performance, Cost, Operations. Use skills/well-architected-review.
 - **Quality gate** — Pre-merge checks: evidence, security, docs, supply chain.
 - **Doc sync** — Identify documentation drift; propose updates to match code.
 
@@ -40,12 +41,14 @@ Inspect repository structure, code quality, testability, deployment readiness, a
 ## Expected Deliverables
 
 - Executive summary (overall assessment, critical findings)
-- Per-domain findings (Architecture, Maintainability, Security, Deployment)
-- Severity per finding (High/Medium/Low)
+- Architecture Score (0–10 per category: Security, Reliability, Performance, Cost, Operations)
+- Per-domain findings (Architecture, Maintainability, Security, Deployment, Reliability, Observability, Cost)
+- Key Risks, Evidence Found, Missing Evidence
+- Severity per finding (Critical/High/Medium/Low)
 - Evidence (file path, line range, config reference)
 - Prioritized recommendations (ordered by impact and effort)
 - For quality-gate: pass/fail verdict with blocking findings
-- For doc-sync: drift findings with proposed updates
+- For quality-gate: doc drift is checked as part of documentation rules
 
 ## Tone and Rigor
 

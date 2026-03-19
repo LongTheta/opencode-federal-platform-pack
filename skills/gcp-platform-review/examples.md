@@ -80,22 +80,61 @@ Sample findings for repo reviews and architecture discovery.
 
 ---
 
+## Policy Guardrails
+
+**Finding:** No Organization Policy or Terraform Validator in repo.  
+**Severity:** Low  
+**Evidence observed:** No `google_org_policy_policy`; pipeline has no policy library.  
+**Missing evidence:** Required labels enforcement; allowed regions.  
+**Recommended action:** Add Terraform Validator or Policy Library to CI; consider Org Policy for labels.
+
+---
+
+## Documentation Maturity
+
+**Finding:** README has setup; runbooks partial.  
+**Severity:** Medium  
+**Evidence observed:** `README.md` and `docs/runbooks/deploy.md`; no rollback or incident runbook.  
+**Missing evidence:** Rollback procedure; incident response steps.  
+**Recommended action:** Add `docs/runbooks/rollback.md` and `incident-response.md`.
+
+---
+
 ## Questions a Solution Architect Should Ask (Sample)
 
+**Resilience**
 - "What happens if us-central1-a fails? Are GKE and Cloud SQL multi-zone?"
-- "How does the pipeline authenticate to GCP? Workload Identity Federation or keys?"
-- "Where is the Cloud SQL password? Secret Manager or variable?"
-- "Do we have VPC Service Controls? What's the perimeter?"
 - "What is our backup retention? Has restore been tested?"
+
+**Identity**
+- "How does the pipeline authenticate to GCP? Workload Identity Federation or keys?"
+- "Any project-level owner/editor roles? Workload Identity for GKE?"
+
+**Secrets**
+- "Where is the Cloud SQL password? Secret Manager or variable?"
+
+**Network**
+- "Do we have VPC Service Controls? What's the perimeter?"
+- "Private Google Access? Any 0.0.0.0/0 ingress? IAP for SSH?"
+
+**Cost**
+- "Labels on all billable resources? Budget alerts?"
+
+**CI/CD**
+- "Terraform plan in CI? Drift detection? Pinned image digests?"
 
 ---
 
 ## Evidence to Request or Look For (Sample)
 
-- `terraform/` with `google_*` resources
-- `google_service_account`, `google_project_iam_*`
-- `google_compute_network`, `google_compute_firewall`
-- `google_secret_manager_secret`
-- `google_logging_project_sink`, `google_monitoring_alert_policy`
-- `labels` on `google_*` resources
-- `cloudbuild.yaml`, `.github/workflows/` with `google-github-actions/auth`
+| Category | Look For |
+|----------|----------|
+| IaC | `terraform/` with `google_*` resources |
+| Identity | `google_service_account`, `workload_identity_config`, Workload Identity Federation |
+| Network | `google_compute_network`, `google_compute_firewall`, `private_ip_google_access` |
+| Workloads | GKE cluster/node pool, Cloud Run, Cloud SQL configs |
+| Secrets | `google_secret_manager_secret` — no JSON keys in repo |
+| Observability | `google_logging_project_sink`, `google_monitoring_alert_policy` |
+| Governance | `labels` block: environment, owner, cost-center |
+| CI/CD | `cloudbuild.yaml`, `.github/workflows/` with `google-github-actions/auth` |
+| Docs | `README.md`, `docs/runbooks/`, `docs/adr/` |

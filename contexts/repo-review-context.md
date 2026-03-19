@@ -1,8 +1,8 @@
 # Repository Review Context
 
-Use this context when performing a full repository review.
+Use with `skills/well-architected-review` when performing a full repository review. See `instructions/repo-review-standards.md` for finding format and domains.
 
-## Checklist
+## Pre-Review Checklist
 
 - [ ] Identify tech stack (language, framework, runtime)
 - [ ] Map directory structure and entry points

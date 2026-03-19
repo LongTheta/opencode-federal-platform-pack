@@ -1,0 +1,17 @@
+{
+  "$schema": "https://claude.ai/hooks.schema.json",
+  "version": "1",
+  "hooks": [
+    {
+      "id": "pre-push-federal-gate",
+      "description": "Remind about quality gate before push",
+      "matcher": "tool == \"Bash\" && tool_input.command matches \"git push\"",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "echo '[Federal Platform Pack] Consider running /quality-gate before push.'"
+        }
+      ]
+    }
+  ]
+}

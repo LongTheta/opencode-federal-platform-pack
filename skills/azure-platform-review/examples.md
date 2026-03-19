@@ -80,22 +80,60 @@ Sample findings for repo reviews and architecture discovery.
 
 ---
 
+## Policy Guardrails
+
+**Finding:** Azure Policy present; required tags not enforced.  
+**Severity:** Low  
+**Evidence observed:** `azurerm_resource_policy_assignment` in `terraform/policy.tf`; no tag enforcement policy.  
+**Missing evidence:** Policy requiring Environment, Owner, CostCenter.  
+**Recommended action:** Add Azure Policy for required tags; consider Checkov in CI.
+
+---
+
+## Documentation Maturity
+
+**Finding:** Architecture doc missing; README has basic setup.  
+**Severity:** Medium  
+**Evidence observed:** `README.md` documents build; no `docs/architecture.md` or `docs/adr/`.  
+**Missing evidence:** Architecture diagram; ADRs for key decisions.  
+**Recommended action:** Create `docs/architecture.md` with diagram; add `docs/adr/` for major decisions.
+
+---
+
 ## Questions a Solution Architect Should Ask (Sample)
 
+**Resilience**
 - "What happens if East US fails? Do we have a secondary region?"
-- "How does the pipeline authenticate to Azure? OIDC or client secret?"
-- "Where is the SQL connection string? Key Vault or app settings?"
-- "Do we have private endpoints for Storage and Key Vault?"
 - "What is our backup retention? Has restore been tested?"
+
+**Identity**
+- "How does the pipeline authenticate to Azure? OIDC or client secret?"
+
+**Secrets**
+- "Where is the SQL connection string? Key Vault or app settings?"
+
+**Network**
+- "Do we have private endpoints for Storage and Key Vault?"
+- "Any 0.0.0.0/0 in NSGs? VNet integration for App Service?"
+
+**Cost**
+- "Tags on all billable resources? Budget alerts?"
+
+**CI/CD**
+- "Terraform plan or Bicep what-if in CI? Drift detection? Pinned image digests?"
 
 ---
 
 ## Evidence to Request or Look For (Sample)
 
-- `terraform/` or `bicep/` with `.tf` or `.bicep` files
-- `azurerm_user_assigned_identity`, `identity` blocks
-- `azurerm_virtual_network`, `azurerm_subnet`, `azurerm_network_security_group`
-- `azurerm_key_vault`, `azurerm_key_vault_access_policy`
-- `azurerm_log_analytics_workspace`, `azurerm_monitor_diagnostic_setting`
-- `tags` block on `azurerm_*` resources
-- `.github/workflows/` or `azure-pipelines.yml` with `azure/login` or `AzureCLI`
+| Category | Look For |
+|----------|----------|
+| IaC | `terraform/`, `bicep/`, `arm/` — `*.tf`, `*.bicep` |
+| Identity | `azurerm_user_assigned_identity`, `identity` blocks, OIDC in workflow |
+| Network | `azurerm_virtual_network`, `azurerm_private_endpoint`, NSG rules |
+| Workloads | AKS node pools, App Service, Function App configs |
+| Secrets | `azurerm_key_vault`, `@Microsoft.KeyVault(...)` — no plaintext |
+| Observability | `azurerm_log_analytics_workspace`, `azurerm_monitor_diagnostic_setting` |
+| Governance | `tags` block: Environment, Owner, CostCenter |
+| CI/CD | `.github/workflows/`, `azure-pipelines.yml`, `azure/login` with OIDC |
+| Docs | `README.md`, `docs/runbooks/`, `docs/adr/` |

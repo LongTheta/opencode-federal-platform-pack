@@ -41,6 +41,7 @@ Ask the right questions about scale, users, integrations, compliance, cost, and 
 - Open questions (prioritized)
 - Constraints (technical, budget, compliance, timeline)
 - Architecture options (1–3) with pros, cons, conditions
+- Key Risks, Evidence Found, Missing Evidence
 - Recommended next steps (design phases, spikes, decisions)
 
 ## Tone and Rigor

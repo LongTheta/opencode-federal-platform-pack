@@ -8,7 +8,7 @@
 
 ## Disclaimer
 
-This report provides readiness indicators, risks, and recommended evidence. It does not constitute formal compliance certification. Formal assessment requires an authorized assessor.
+This report provides **readiness indicators**, **risks**, and **recommended evidence**. It does not constitute formal compliance certification. Formal assessment requires an authorized assessor. Do not use this report to claim FedRAMP, FISMA, or DoD compliance.
 
 ---
 
@@ -24,7 +24,7 @@ This report provides readiness indicators, risks, and recommended evidence. It d
 
 | Finding | Severity | Evidence Observed | Missing Evidence | Recommended Action |
 |---------|----------|-------------------|------------------|-------------------|
-| | High / Medium / Low | | | |
+| | Critical / High / Medium / Low | | | |
 
 **Readiness score:** [1–5]  
 **Notes:**
@@ -35,7 +35,7 @@ This report provides readiness indicators, risks, and recommended evidence. It d
 
 | Finding | Severity | Evidence Observed | Missing Evidence | Recommended Action |
 |---------|----------|-------------------|------------------|-------------------|
-| | High / Medium / Low | | | |
+| | Critical / High / Medium / Low | | | |
 
 **Readiness score:** [1–5]  
 **Notes:**
@@ -46,7 +46,7 @@ This report provides readiness indicators, risks, and recommended evidence. It d
 
 | Finding | Severity | Evidence Observed | Missing Evidence | Recommended Action |
 |---------|----------|-------------------|------------------|-------------------|
-| | High / Medium / Low | | | |
+| | Critical / High / Medium / Low | | | |
 
 **Readiness score:** [1–5]  
 **Notes:**
@@ -57,7 +57,7 @@ This report provides readiness indicators, risks, and recommended evidence. It d
 
 | Finding | Severity | Evidence Observed | Missing Evidence | Recommended Action |
 |---------|----------|-------------------|------------------|-------------------|
-| | High / Medium / Low | | | |
+| | Critical / High / Medium / Low | | | |
 
 **Readiness score:** [1–5]  
 **Notes:**
@@ -68,7 +68,7 @@ This report provides readiness indicators, risks, and recommended evidence. It d
 
 | Finding | Severity | Evidence Observed | Missing Evidence | Recommended Action |
 |---------|----------|-------------------|------------------|-------------------|
-| | High / Medium / Low | | | |
+| | Critical / High / Medium / Low | | | |
 
 **Readiness score:** [1–5]  
 **Notes:**
@@ -79,7 +79,7 @@ This report provides readiness indicators, risks, and recommended evidence. It d
 
 | Finding | Severity | Evidence Observed | Missing Evidence | Recommended Action |
 |---------|----------|-------------------|------------------|-------------------|
-| | High / Medium / Low | | | |
+| | Critical / High / Medium / Low | | | |
 
 **Readiness score:** [1–5]  
 **Notes:**
@@ -90,7 +90,7 @@ This report provides readiness indicators, risks, and recommended evidence. It d
 
 | Finding | Severity | Evidence Observed | Missing Evidence | Recommended Action |
 |---------|----------|-------------------|------------------|-------------------|
-| | High / Medium / Low | | | |
+| | Critical / High / Medium / Low | | | |
 
 **Readiness score:** [1–5]  
 **Notes:**
@@ -101,7 +101,7 @@ This report provides readiness indicators, risks, and recommended evidence. It d
 
 | Finding | Severity | Evidence Observed | Missing Evidence | Recommended Action |
 |---------|----------|-------------------|------------------|-------------------|
-| | High / Medium / Low | | | |
+| | Critical / High / Medium / Low | | | |
 
 **Readiness score:** [1–5]  
 **Notes:**
@@ -112,7 +112,7 @@ This report provides readiness indicators, risks, and recommended evidence. It d
 
 | Finding | Severity | Evidence Observed | Missing Evidence | Recommended Action |
 |---------|----------|-------------------|------------------|-------------------|
-| | High / Medium / Low | | | |
+| | Critical / High / Medium / Low | | | |
 
 **Readiness score:** [1–5]  
 **Notes:**
@@ -123,10 +123,22 @@ This report provides readiness indicators, risks, and recommended evidence. It d
 
 | Finding | Severity | Evidence Observed | Missing Evidence | Recommended Action |
 |---------|----------|-------------------|------------------|-------------------|
-| | High / Medium / Low | | | |
+| | Critical / High / Medium / Low | | | |
 
 **Readiness score:** [1–5]  
 **Notes:**
+
+---
+
+## Evidence Found
+
+[Summary of file paths, configs, manifests observed across the review.]
+
+---
+
+## Missing Evidence
+
+[What could not be verified; recommend validation steps for each.]
 
 ---
 

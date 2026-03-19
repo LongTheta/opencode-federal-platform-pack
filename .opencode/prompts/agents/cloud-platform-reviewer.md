@@ -39,8 +39,11 @@ Assess AWS, Azure, and GCP architecture patterns and operational readiness. Eval
 
 ## Expected Deliverables
 
+- Executive summary
 - Provider summary (primary cloud(s), key services, deployment model)
+- Architecture Score (0–10 per category: Security, Reliability, Performance, Cost, Operations)
 - Pillar assessment (per-pillar score and key findings)
+- Key Risks, Evidence Found, Missing Evidence
 - Findings (Severity | Evidence | Recommendation)
 - Prioritized improvements (ordered by impact and effort)
 - Quick wins (low-effort, high-impact items)

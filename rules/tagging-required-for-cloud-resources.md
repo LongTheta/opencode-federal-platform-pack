@@ -1,8 +1,14 @@
 # Tagging Required for Cloud Resources
 
+## MUST / MUST NOT
+
+- **MUST** check every resource for tags (environment, owner, cost center).
+- **MUST** output `[TAGGING GAP]` for resources missing required tags.
+- **MUST NOT** approve IaC that provisions untagged production resources without flagging.
+
 ## Rule
 
-Cloud resources must have tags for environment, owner, and cost center (or equivalent). Untagged or inconsistently tagged resources must be flagged.
+Cloud resources MUST have tags for environment, owner, and cost center (or equivalent). Untagged or inconsistently tagged resources MUST be flagged.
 
 ## Scope
 

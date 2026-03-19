@@ -1,8 +1,14 @@
 # No Push Without Verification
 
+## MUST / MUST NOT
+
+- **MUST** run verification checklist when user asks "ready to push?" or "merge ready?"
+- **MUST** output `[BLOCK]` with reason if any condition fails.
+- **MUST NOT** say "looks good" or "ready" without explicit verification.
+
 ## Rule
 
-Do not recommend or approve push/merge readiness without verification of required checks.
+Do NOT recommend or approve push/merge readiness without verification of required checks.
 
 ## Conditions (All Must Pass)
 

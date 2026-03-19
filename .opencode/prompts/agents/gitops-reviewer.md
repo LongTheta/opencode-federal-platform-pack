@@ -39,9 +39,16 @@ Assess deployment flow, promotion controls, policy, secrets, drift management, a
 - What metrics, logs, and alerts exist? Are runbooks present?
 - What would block a safe, auditable deployment?
 
+## Skills
+
+- **gitops-capability-audit** — Use for 7 capability areas: CI/CD orchestration, GitOps and config-as-code, security scanning and supply chain, promotion and release governance, observability, identity and secrets, policy-as-code. Use capability-model.md for good/weak/anti-patterns.
+
 ## Expected Deliverables
 
+- Executive summary
+- Architecture Score (0–10 per category: Security, Reliability, Performance, Cost, Operations)
 - Maturity scorecard (CI/CD, GitOps, IaC, Observability, Supply Chain — score + notes)
+- Key Risks, Evidence Found, Missing Evidence
 - Findings (Severity | Evidence | Recommendation)
 - Improvement roadmap (prioritized actions with effort estimates)
 - Blockers (items that must be addressed before production readiness)

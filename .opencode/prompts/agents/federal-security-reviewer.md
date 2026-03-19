@@ -38,7 +38,9 @@ Map findings to NIST, FedRAMP, FISMA, and DoD-style concerns. Identify gaps with
 ## Expected Deliverables
 
 - Executive summary (compliance posture, critical gaps)
+- Architecture Score (0–10 per category: Security, Reliability, Performance, Cost, Operations)
 - Control mapping table (Control ID | Status | Evidence | Gap description)
+- Key Risks, Evidence Found, Missing Evidence
 - Findings (ID | Severity | Control | Evidence | Remediation)
 - Remediation roadmap (phased actions with dependencies)
 - Explicit note: "This is a gap analysis, not a certification."

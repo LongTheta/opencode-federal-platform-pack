@@ -1,6 +1,10 @@
 # Core Engineering Instructions
 
-These instructions apply to all agents and commands. Enforce them; do not treat as advisory.
+These instructions apply to all agents and commands. **Enforce them; do not treat as advisory.**
+
+**Well-Architected default:** If a system would fail a Well-Architected review (security, reliability, performance, cost, operations), it MUST be flagged. See `instructions/aws-derived-principles.md` for universal principles.
+
+**Detailed standards:** See `repo-review-standards.md`, `architecture-review-standards.md`, `federal-review-standards.md`, `documentation-rules.md`, `cloud-governance-rules.md`, `gitops-governance-rules.md` for domain-specific rules.
 
 ## Evidence
 
@@ -34,6 +38,12 @@ These instructions apply to all agents and commands. Enforce them; do not treat 
 - **REQUIRED:** Before proposing architectural changes, search the codebase for existing patterns.
 - **REQUIRED:** Align recommendations with current technology choices unless there is a documented reason to diverge.
 - **FORBIDDEN:** Proposing architecture without referencing observed constraints.
+
+## Well-Architected Alignment
+
+- **REQUIRED:** All recommendations must align to: security, reliability, performance, cost awareness, operational excellence.
+- **REQUIRED:** Require observability, auditability, scalability, failure handling, documentation for all systems.
+- **REQUIRED:** Flag systems that lack: observability, access control model, deployment safety, documentation for major components, recovery strategy.
 
 ## Federal Reviews
 

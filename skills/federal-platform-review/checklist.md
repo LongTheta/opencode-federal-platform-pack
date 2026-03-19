@@ -1,6 +1,6 @@
 # Federal Platform Review Checklist
 
-Use this checklist when performing a federal-platform-review. For each domain, assess criteria and document evidence or gaps.
+Use this checklist when performing a federal-platform-review. For each domain, assess criteria and document evidence or gaps. **Do not claim formal compliance.** Phrase as readiness indicators, risks, and recommended evidence.
 
 ---
 

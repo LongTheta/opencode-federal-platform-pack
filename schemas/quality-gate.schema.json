@@ -2,14 +2,14 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://opencode-federal-platform-pack/schemas/quality-gate.schema.json",
   "title": "Quality Gate Report",
-  "description": "Schema for pre-push quality gate output",
+  "description": "Schema for pre-push quality gate output. Verdict: pass | pass_with_warnings | fail.",
   "type": "object",
-  "required": ["verdict", "timestamp", "checks"],
+  "required": ["verdict", "timestamp", "checks", "findings"],
   "properties": {
     "verdict": {
       "type": "string",
       "enum": ["pass", "pass_with_warnings", "fail"],
-      "description": "Overall gate result. pass: no blockers or warnings. pass_with_warnings: no blockers, has warnings. fail: one or more blockers."
+      "description": "pass: no blockers or warnings. pass_with_warnings: no blockers, has warnings. fail: one or more blockers."
     },
     "timestamp": {
       "type": "string",
@@ -31,7 +31,8 @@
         "changelog": { "$ref": "#/definitions/checkResult" },
         "ownership_tagging": { "$ref": "#/definitions/checkResult" },
         "evidence_strength": { "$ref": "#/definitions/checkResult" }
-      }
+      },
+      "additionalProperties": false
     },
     "findings": {
       "type": "array",
@@ -61,6 +62,11 @@
       "type": "array",
       "items": { "type": "string" },
       "description": "Concrete actions required before push (when verdict is fail)"
+    },
+    "trigger_paths": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Paths that triggered checks (from git diff)"
     }
   },
   "definitions": {
@@ -74,7 +80,7 @@
         "status": {
           "type": "string",
           "enum": ["pass", "warn", "block", "info", "skipped"],
-          "description": "Result of this check"
+          "description": "pass: no findings. warn: has warnings. block: has blockers. info: informational only. skipped: not triggered."
         },
         "message": {
           "type": "string",
@@ -88,7 +94,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "Unique identifier for the finding"
+          "description": "Unique identifier for the finding (e.g., tests-001, security-002)"
         },
         "classification": {
           "type": "string",

@@ -126,13 +126,25 @@
 
 ## Questions a Solution Architect Should Ask
 
-[Document open questions from discovery session.]
+[Document open questions from discovery session. Use checklist.md "Questions a Solution Architect Should Ask" as prompts. Examples:]
+- What is the blast radius of a single AZ failure?
+- How are IAM roles scoped? Any `*` in policies?
+- Where do secrets live? Secrets Manager or Parameter Store?
+- VPC endpoints for S3, ECR? Any 0.0.0.0/0 in production?
+- What is RTO/RPO? Has restore been tested?
+- Terraform plan in CI? Drift detection?
 
 ---
 
 ## Evidence to Request or Look For
 
-[Document evidence not found and where to obtain it.]
+[Document evidence not found and where to obtain it. Use checklist.md "Evidence to Request or Look For" as reference. Examples:]
+- Terraform/CloudFormation in `terraform/`, `cloudformation/`
+- IAM role definitions, VPC/security group configs
+- Secrets Manager or Parameter Store references
+- CloudWatch log groups, retention, alarms
+- Tags on `aws_*` resources
+- `.github/workflows/` with `terraform plan`, OIDC
 
 ---
 

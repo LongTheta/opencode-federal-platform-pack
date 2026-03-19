@@ -6,6 +6,10 @@
 2. **Option A — Project-local:** Copy `.opencode/` into your project root.
 3. **Option B — Config dir:** Set `OPENCODE_CONFIG_DIR` to this pack's root.
 
+## Config
+
+- **opencode.json** — Defines agents, commands, and instruction load order. Instructions load: aws-derived-principles, core-engineering, repo/arch/federal standards, documentation-rules, cloud-governance-rules, gitops-governance-rules, then `rules/*.md`.
+
 ## Commands
 
 | Command | Purpose |
@@ -43,9 +47,9 @@ Invoke with `@`:
 
 Reference from commands or Cursor:
 
-- `skills/repo-review/` — Repository review workflow
+- `skills/well-architected-review/` — Universal platform review (Security, Reliability, Performance, Cost, Operations)
 - `skills/federal-platform-review/` — Federal checklist
-- `skills/gitops-maturity/` — GitOps audit
+- `skills/gitops-capability-audit/` — GitOps audit (7 capability areas)
 - `skills/aws-platform-review/`, `azure-platform-review/`, `gcp-platform-review/` — Cloud-specific
 
 ## Rules

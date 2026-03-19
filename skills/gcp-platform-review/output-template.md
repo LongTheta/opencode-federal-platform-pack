@@ -126,13 +126,26 @@
 
 ## Questions a Solution Architect Should Ask
 
-[Document open questions from discovery session.]
+[Document open questions from discovery session. Use checklist.md "Questions a Solution Architect Should Ask" as prompts. Examples:]
+- What is the blast radius of a single zone failure?
+- How are service accounts scoped? Workload Identity for GKE?
+- Where do secrets live? Secret Manager with workload identity?
+- Private Google Access? VPC Service Controls?
+- What is RTO/RPO? Has restore been tested?
+- Terraform plan in CI? Workload Identity Federation for pipeline?
 
 ---
 
 ## Evidence to Request or Look For
 
-[Document evidence not found and where to obtain it.]
+[Document evidence not found and where to obtain it. Use checklist.md "Evidence to Request or Look For" as reference. Examples:]
+- Terraform in `terraform/` with `google` provider
+- `google_service_account`, `google_project_iam_*` definitions
+- `google_compute_network`, `google_compute_firewall`
+- Secret Manager references (not secret values)
+- Cloud Logging sinks, alerting policies
+- Labels on `google_*` resources
+- `cloudbuild.yaml`, `.github/workflows/` with Workload Identity Federation
 
 ---
 

@@ -1,6 +1,6 @@
 # Federal Platform Review — Examples
 
-Sample findings and output patterns. Use as reference; do not copy verbatim.
+Sample findings and output patterns. Use as reference; do not copy verbatim. **Phrase as readiness indicators and risks — never as compliance or certification.**
 
 ---
 
@@ -14,6 +14,26 @@ Sample findings and output patterns. Use as reference; do not copy verbatim.
 
 ---
 
+## Example: CI/CD Maturity
+
+**Finding:** No vulnerability scan in pipeline.  
+**Severity:** High  
+**Evidence observed:** `.github/workflows/build.yml` runs `npm ci` and `docker build`; no Trivy, Snyk, or equivalent.  
+**Missing evidence:** Vulnerability scan step; failure gate on high/critical.  
+**Recommended action:** Add Trivy or Snyk to pipeline; fail build on high/critical. Aligns with SI-3, SA-11 assurance themes.
+
+---
+
+## Example: GitOps Readiness
+
+**Finding:** Argo CD present; drift detection enabled.  
+**Severity:** None (positive finding)  
+**Evidence observed:** `argocd/application.yaml` defines sync policy; `syncOptions: CreateNamespace=true`.  
+**Missing evidence:** None for this criterion.  
+**Recommended action:** Document promotion path between environments in runbook.
+
+---
+
 ## Example: IAM and Secrets
 
 **Finding:** API keys loaded from environment variables.  
@@ -21,6 +41,16 @@ Sample findings and output patterns. Use as reference; do not copy verbatim.
 **Evidence observed:** `config/settings.py` lines 12–15 load `API_KEY` from `os.environ`.  
 **Missing evidence:** External secrets config (Vault, ESO, Secrets Manager).  
 **Recommended action:** Implement External Secrets Operator or Vault integration. Remove plaintext from config. Document secret rotation procedure. Aligns with IA-5, SC-28 assurance themes.
+
+---
+
+## Example: Logging and Auditability
+
+**Finding:** Audit logging retention not verifiable from repository.  
+**Severity:** Medium  
+**Evidence observed:** CloudWatch log group in `terraform/logging.tf`; retention not set in IaC.  
+**Missing evidence:** Log retention policy; audit event definition; tamper resistance.  
+**Recommended action:** Add `retention_in_days` to Terraform; document auditable events in runbook. Recommend runtime verification for assessor. Aligns with AU-2, AU-9.
 
 ---
 
@@ -44,13 +74,23 @@ Sample findings and output patterns. Use as reference; do not copy verbatim.
 
 ---
 
+## Example: IaC Quality
+
+**Finding:** Terraform present; tagging partial.  
+**Severity:** Medium  
+**Evidence observed:** `terraform/main.tf` has `environment` and `project` tags; `cost_center` and `owner` missing on 3 resources.  
+**Missing evidence:** Full tagging on all billable resources; policy-as-code (OPA, Checkov).  
+**Recommended action:** Add `cost_center` and `owner` to all resources. Consider Checkov in CI. Aligns with CM-2, SA.
+
+---
+
 ## Example: Missing Evidence
 
-**Finding:** Audit logging retention not verifiable from repository.  
+**Finding:** MFA for privileged access not verifiable from repository.  
 **Severity:** Medium  
-**Evidence observed:** CloudWatch log group in `terraform/logging.tf`; retention not set in IaC.  
-**Missing evidence:** Log retention policy; audit event definition; tamper resistance.  
-**Recommended action:** Add `retention_in_days` to Terraform; document auditable events in runbook. Recommend runtime verification for assessor. Aligns with AU-2, AU-9.
+**Evidence observed:** IAM roles defined in `terraform/iam.tf`; no MFA policy in IaC.  
+**Missing evidence:** MFA enforcement; runtime IAM config.  
+**Recommended action:** [EVIDENCE MISSING] MFA for privileged access. Recommend: verify in AWS IAM console or IdP config. Document in runbook. Aligns with IA-2.
 
 ---
 
@@ -74,7 +114,7 @@ Sample findings and output patterns. Use as reference; do not copy verbatim.
 
 ## Example: Executive Summary
 
-The platform shows adequate readiness for federal assessment with notable gaps. **Critical risks:** Secrets in environment variables (IA-5); no SBOM in pipeline (SA-12). **Strengths:** GitOps with Argo CD, manual prod approval, Terraform with tagging. **Recommended before formal assessment:** Implement external secrets, add SBOM to pipeline, document audit events and retention. Overall readiness: 3.4/5 — address IAM and supply chain to reach assessment-ready state.
+The platform shows **adequate readiness** for federal assessment with notable gaps. **Critical risks:** None identified. **High risks:** Secrets in environment variables (IA-5); no SBOM in pipeline (SA-12). **Strengths:** GitOps with Argo CD, manual prod approval, Terraform with tagging. **Recommended before formal assessment:** Implement external secrets, add SBOM to pipeline, document audit events and retention. Overall readiness: 3.4/5 — address IAM and supply chain to reach assessment-ready state. *This report does not constitute formal compliance certification.*
 
 ---
 

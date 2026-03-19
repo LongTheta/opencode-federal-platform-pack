@@ -126,13 +126,25 @@
 
 ## Questions a Solution Architect Should Ask
 
-[Document open questions from discovery session.]
+[Document open questions from discovery session. Use checklist.md "Questions a Solution Architect Should Ask" as prompts. Examples:]
+- What is the blast radius of a single region failure?
+- How are managed identities used? OIDC for CI/CD?
+- Where do secrets live? Key Vault with managed identity?
+- Private endpoints for Storage, Key Vault, SQL?
+- What is RTO/RPO? Has restore been tested?
+- Terraform plan or Bicep what-if in CI? Drift detection?
 
 ---
 
 ## Evidence to Request or Look For
 
-[Document evidence not found and where to obtain it.]
+[Document evidence not found and where to obtain it. Use checklist.md "Evidence to Request or Look For" as reference. Examples:]
+- Terraform/Bicep in `terraform/`, `bicep/`
+- `azurerm_user_assigned_identity`, VNet, NSG, private endpoint configs
+- Key Vault references (not secrets)
+- Log Analytics workspace, diagnostic settings
+- Tags on `azurerm_*` resources
+- `.github/workflows/` or `azure-pipelines.yml` with OIDC
 
 ---
 

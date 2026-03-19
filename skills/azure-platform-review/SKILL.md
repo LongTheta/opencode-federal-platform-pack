@@ -1,6 +1,7 @@
 ---
 name: azure-platform-review
 description: Azure platform and repository review for identity, network, workload isolation, secrets, observability, tagging, cost, resilience, CI/CD, policy, and documentation. Use for repo reviews and architecture discovery.
+risk_tier: 0
 ---
 
 # Azure Platform Review Skill
@@ -40,28 +41,78 @@ Assesses Azure-based platforms and repositories for production readiness and ope
 
 ## Questions a Solution Architect Should Ask
 
+**Resilience and blast radius**
 - What is the blast radius of a single region failure? Geo-redundancy?
+- Are SQL Database and Storage geo-replicated? What happens if East US fails?
+- What is the RTO/RPO? Has backup restore been tested?
+
+**Identity and access**
 - How are managed identities used? Any service principals with long-lived secrets?
+- OIDC or federated credentials for CI/CD? No client secrets in pipelines?
+- Entra ID conditional access for console? (if applicable)
+
+**Secrets and data**
 - Where do secrets live? Key Vault with managed identity access?
+- Where is the SQL connection string? Key Vault reference or app settings?
+
+**Network**
 - What is the network segmentation? Private endpoints vs. public endpoints?
+- Private endpoints for Storage, Key Vault, SQL? Any 0.0.0.0/0 in NSGs?
+- VNet integration for App Service/Functions?
+
+**Cost and governance**
 - How is cost allocated? Tags on all billable resources?
-- What is the RTO/RPO? Backup and restore tested?
+- Budget alerts? Right-sized SKUs?
+
+**CI/CD and drift**
 - How does CI/CD authenticate? OIDC or federated credentials?
-- Is there drift detection? Terraform plan in CI? Azure Policy?
+- Terraform plan or Bicep what-if in CI?
+- Is there drift detection? Azure Policy?
+- Pinned image digests? No `:latest` in prod?
 
 ## Evidence to Request or Look For
 
+**IaC and structure**
 - Terraform/Bicep/ARM in `terraform/`, `bicep/`, `arm/`
-- `azurerm_*` or `azuread_*` resource definitions
-- VNet, subnet, NSG configs
-- AKS node pools, App Service, Function App configs
-- Key Vault references (not secrets)
-- Log Analytics workspace, diagnostic settings
-- `tags` block on `azurerm_*` resources
-- Backup config (Recovery Services, SQL geo-replication)
-- `.github/workflows/` or `azure-pipelines.yml` for CI/CD
-- Azure Policy definitions or assignments
-- `docs/`, `README.md`, runbooks
+- `*.tf`, `*.bicep`, `*.json` (ARM)
+
+**Identity**
+- `azurerm_user_assigned_identity`, `identity { type = "SystemAssigned" }`
+- `azurerm_role_assignment`, custom role definitions
+- OIDC in workflow: `azure/login` with `id-token: write`
+
+**Network**
+- `azurerm_virtual_network`, `azurerm_subnet`, `azurerm_network_security_group`
+- `azurerm_private_endpoint` for Storage, Key Vault, SQL
+- `azurerm_app_service_virtual_network_swift_connection`
+
+**Workloads**
+- AKS: `azurerm_kubernetes_cluster`, node pools, `kubernetes_*`
+- App Service: `azurerm_app_service`, `azurerm_app_service_plan`
+- Function App: `azurerm_function_app`
+
+**Secrets**
+- `azurerm_key_vault`, `azurerm_key_vault_access_policy`
+- `@Microsoft.KeyVault(...)` in app settings — no plaintext
+- Key Vault firewall, private endpoint
+
+**Observability**
+- `azurerm_log_analytics_workspace`, `azurerm_application_insights`
+- `azurerm_monitor_diagnostic_setting`, `azurerm_monitor_metric_alert`
+- `retention_in_days` on workspace
+
+**Governance**
+- `tags` block on `azurerm_*` resources: Environment, Owner, CostCenter
+- `azurerm_consumption_budget` (if in repo)
+- `azurerm_policy_definition`, `azurerm_resource_policy_assignment`
+
+**CI/CD**
+- `.github/workflows/`, `azure-pipelines.yml`
+- `azure/login` with OIDC, `az deployment group create` (Bicep)
+- ACR references with digest, not `:latest`
+
+**Documentation**
+- `README.md`, `docs/`, `docs/runbooks/`, `docs/adr/`
 
 ## Output Format
 

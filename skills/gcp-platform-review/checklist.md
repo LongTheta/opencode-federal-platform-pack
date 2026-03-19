@@ -165,6 +165,35 @@ Use for repo reviews and architecture discovery. Assess each domain and document
 
 ---
 
+## Questions a Solution Architect Should Ask
+
+| Domain | Sample Questions |
+|--------|------------------|
+| **Resilience** | What is the blast radius of a single zone failure? Multi-zone for GKE, Cloud SQL? What is RTO/RPO? Has restore been tested? |
+| **Identity** | How are service accounts scoped? Any project-level owner/editor? Workload Identity for GKE? Workload Identity Federation for CI/CD? |
+| **Secrets** | Where do secrets live? Secret Manager with workload identity? Where is the Cloud SQL password? |
+| **Network** | Private Google Access? VPC Service Controls? Any 0.0.0.0/0 ingress? IAP for SSH? |
+| **Cost** | Labels on all billable resources? Budget alerts? |
+| **CI/CD** | Terraform plan in CI? Workload Identity Federation? Drift detection? Pinned image digests? |
+
+---
+
+## Evidence to Request or Look For
+
+| Category | Artifacts |
+|----------|-----------|
+| **IaC** | `terraform/`, `infra/` — `*.tf` with `google` provider |
+| **Identity** | `google_service_account`, `google_project_iam_*`, `workload_identity_config` |
+| **Network** | `google_compute_network`, `google_compute_firewall`, `private_ip_google_access` |
+| **Workloads** | GKE cluster/node pool, Cloud Run, Cloud SQL configs |
+| **Secrets** | `google_secret_manager_secret` — no JSON keys in repo |
+| **Observability** | `google_logging_project_sink`, `google_monitoring_alert_policy`, `retention_in_days` |
+| **Governance** | `labels` block (environment, owner, cost-center), `google_billing_budget`, Org Policy |
+| **CI/CD** | `cloudbuild.yaml`, `.github/workflows/` with Workload Identity Federation |
+| **Docs** | `README.md`, `docs/`, `docs/runbooks/`, `docs/adr/` |
+
+---
+
 ## Readiness Score (Per Domain)
 
 | Domain | Score (1–5) | Notes |

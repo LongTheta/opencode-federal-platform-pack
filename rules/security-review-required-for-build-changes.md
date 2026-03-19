@@ -1,8 +1,14 @@
 # Security Review Required for Build Changes
 
+## MUST / MUST NOT
+
+- **MUST** run security and supply-chain checks when CI/CD, containers, dependencies, or IaC change.
+- **MUST NOT** approve push/merge for trigger changes without completing the checks.
+- **MUST NOT** skip security review for build/deploy changes.
+
 ## Rule
 
-Security and supply-chain review are required when CI/CD, containers, dependencies, or IaC change.
+Security and supply-chain review are REQUIRED when CI/CD, containers, dependencies, or IaC change.
 
 ## Trigger Conditions
 

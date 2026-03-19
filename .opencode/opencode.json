@@ -1,12 +1,17 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "name": "opencode-federal-platform-pack",
-  "description": "OpenCode-first AI engineering pack: repository review + platform/architecture/DevSecOps recommendations, and solution architect + product manager discovery",
+  "description": "OpenCode-first platform engineering pack: repo review, solution architect discovery, platform design, federal checklist, GitOps audit, quality gate.",
 
   "instructions": [
+    "instructions/aws-derived-principles.md",
     "instructions/core-engineering.md",
-    "instructions/platform-review-standards.md",
-    "instructions/governance-rules.md",
+    "instructions/repo-review-standards.md",
+    "instructions/architecture-review-standards.md",
+    "instructions/federal-review-standards.md",
+    "instructions/documentation-rules.md",
+    "instructions/cloud-governance-rules.md",
+    "instructions/gitops-governance-rules.md",
     "../rules/*.md"
   ],
 
@@ -58,7 +63,7 @@
   "command": {
     "repo-assess": {
       "description": "Full repository assessment: architecture, security, deployment readiness",
-      "template": "Perform a comprehensive repository assessment. Assess architecture, maintainability, security, and deployment readiness. Produce evidence-based findings with severity levels (High/Medium/Low). Cite specific files and configs. Use schemas/review-report.json structure.",
+      "template": "Perform a comprehensive repository assessment. Use skills/well-architected-review. Evaluate: Security posture, Reliability/failure modes, Observability coverage, Deployment safety, Cost awareness, Operational readiness. For each: identify gaps, classify severity (Critical/High/Medium/Low), recommend fixes. Output: Use schemas/review-score.schema.json. Include review_target, summary (final_score, letter_grade, confidence, production_readiness), categories (security 0.25, reliability 0.20, performance 0.15, cost_awareness 0.10, operational_excellence 0.30) with score, rationale, evidence_found, missing_evidence, risks, recommended_actions per category, findings by severity, top_priorities with owner_hint.",
       "agent": "repo-auditor"
     },
     "solution-discovery": {
@@ -68,22 +73,22 @@
     },
     "platform-design": {
       "description": "Platform architecture design with tradeoffs and cloud alignment",
-      "template": "Design platform architecture for the given context. Consider scalability, reliability, security, cost, and operational excellence. Present options with tradeoffs. Align with cloud Well-Architected where applicable. Context: $ARGUMENTS",
+      "template": "Design platform architecture for the given context. Use instructions/aws-derived-principles.md. Consider: Security, Reliability, Performance, Cost, Operational excellence. Require: observability, auditability, scalability, failure handling, documentation. Present 1–3 options with tradeoffs. If a design would fail a Well-Architected review, flag it. Output: Executive Summary, Architecture Score (0–10 per pillar), Key Risks, Evidence/Missing Evidence, Recommended Actions. Context: $ARGUMENTS",
       "agent": "solution-architect"
     },
     "federal-checklist": {
       "description": "Federal compliance checklist (NIST, FedRAMP, FISMA, DoD)",
-      "template": "Produce a federal compliance checklist. Use skills/federal-platform-review. Map observable artifacts to NIST 800-53 control families. Identify gaps with evidence. Prioritize remediation. Output: control mapping table, findings, remediation roadmap. Use schemas/compliance-report.json structure.",
+      "template": "Produce a federal compliance checklist. Use skills/federal-platform-review, skills/nist-compliance-evaluator, and skills/well-architected-review. For AWS repos, also use skills/aws-federal-grade-checklist. Evaluate: Security posture, Reliability, Observability, Deployment safety, Cost awareness, Operational readiness. Map to NIST 800-53 control families. Identify gaps with evidence. Output: Executive Summary, Architecture Score (0–10 per category), Control mapping, Key Risks, Evidence Found, Missing Evidence, Remediation roadmap. Use schemas/compliance-report.json and schemas/well-architected-score.json.",
       "agent": "federal-security-reviewer"
     },
     "gitops-audit": {
       "description": "GitOps, CI/CD, and platform engineering maturity audit",
-      "template": "Audit GitOps, CI/CD, IaC, observability, and platform engineering maturity. Use skills/gitops-maturity. Evaluate pipelines, deployment manifests, supply chain controls. Produce maturity scorecard and prioritized improvement roadmap.",
+      "template": "Audit GitOps, CI/CD, IaC, observability, and platform engineering maturity. Use skills/gitops-capability-audit and skills/well-architected-review. Evaluate 7 capability areas: CI/CD orchestration, GitOps and config-as-code, security scanning and supply chain, promotion and release governance, observability, identity and secrets, policy-as-code. Identify gaps, classify severity, recommend remediation. Output: Executive Summary, findings by capability, Evidence Found, Missing Evidence, Remediation roadmap. Use capability-model.md for good/weak/anti-patterns.",
       "agent": "gitops-reviewer"
     },
     "quality-gate": {
-      "description": "Pre-push quality gate: evidence, security, docs, supply chain",
-      "template": "Run pre-push quality gate. Use docs/quality-gate-workflow.md and schemas/quality-gate.schema.json. Check: evidence-based recommendations, no security shortcuts, docs updated with code changes, supply-chain controls for build/deploy. Report pass / pass with warnings / fail with blocking findings.",
+      "description": "Pre-push quality gate: evidence, security, docs, supply chain, Well-Architected",
+      "template": "Run pre-push quality gate. Use docs/quality-gate-workflow.md and schemas/quality-gate.schema.json. FAIL if: no observability, no access control model, no deployment safety, no documentation for major components, no recovery strategy. WARN if: cost visibility missing, scaling unclear, tagging missing. Also check: evidence-based recommendations, no security shortcuts, docs updated with code changes, supply-chain controls for build/deploy. Report pass / pass with warnings / fail with blocking findings.",
       "agent": "repo-auditor"
     }
   },

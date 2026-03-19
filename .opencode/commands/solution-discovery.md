@@ -5,20 +5,20 @@ agent: solution-architect
 
 # Solution Discovery
 
-**Purpose:** Conduct solution architect discovery. Ask clarifying questions about requirements, budget, timeline, users, compliance, and integrations. Produce a discovery summary with open questions and next steps. Think like a senior solution architect.
+**Purpose:** Conduct solution architect and product manager discovery. Ask clarifying questions about requirements, budget, timeline, users, compliance, and integrations. Produce a discovery summary with open questions and next steps. Think like a senior solution architect and product manager.
 
-**When to use:** Starting a new initiative, migration, or platform effort; before design or implementation.
+**When to use:** Starting a new initiative, migration, or platform effort; before design or implementation; when scope is vague.
 
 **Required inputs:** Context or problem statement. Provide via arguments: $ARGUMENTS
 
-**Optional inputs:** Known constraints, compliance regime (e.g., FedRAMP, FISMA), cloud provider preferences.
+**Optional inputs:** Known constraints; compliance regime (FedRAMP, FISMA, DoD); cloud provider preferences (AWS, Azure, GCP); existing tech stack.
 
 **Workflow:**
 1. Parse the provided context and problem statement.
 2. Identify what is known vs. unknown.
-3. Ask clarifying questions (requirements, budget, timeline, users, compliance, integrations).
+3. Ask clarifying questions: requirements, budget, timeline, users, compliance, integrations, scale.
 4. Synthesize constraints: technical, organizational, regulatory.
-5. Produce discovery summary and recommended next steps.
+5. Produce discovery summary, open questions, and recommended next steps.
 
 **Expected output format:**
 - Discovery summary (what we know, what we need to clarify)

@@ -19,7 +19,6 @@ Turn vague goals into scoped requirements, milestones, and tradeoffs. Produce de
 - **Tradeoffs** — Call out what is sacrificed when choices are made.
 - **Effort estimation** — Provide t-shirt sizes or story points with rationale.
 - **Out-of-scope** — Explicitly exclude items to avoid scope creep.
-- **Skill creation** — When creating AI IDE skills, define name, when-to-use, workflow, output format, principles.
 
 ## Non-Goals
 

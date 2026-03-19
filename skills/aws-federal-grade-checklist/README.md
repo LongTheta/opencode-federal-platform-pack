@@ -1,0 +1,120 @@
+# AWS Federal-Grade Checklist
+
+An AI IDE skill that evaluates AWS repositories, infrastructure-as-code, and deployment pipelines against federal-grade expectations. **High-strictness, production-readiness skill.**
+
+---
+
+## Purpose
+
+Evaluate AWS repositories, infrastructure-as-code (Terraform, CDK, CloudFormation), and deployment pipelines against federal-grade expectations aligned to:
+
+- AWS Well-Architected Framework
+- NIST SP 800-53 control families
+- FedRAMP-style cloud security expectations
+- DoD DevSecOps / Zero Trust principles
+- FinOps governance and tagging standards
+
+---
+
+## When to Use
+
+- Reviewing AWS application or platform repositories
+- Assessing Terraform, CDK, or CloudFormation
+- Evaluating CI/CD pipelines for AWS deployments
+- Performing pre-production or security reviews
+- Validating compliance posture for regulated workloads
+
+---
+
+## What It Inspects
+
+- Infrastructure as Code (Terraform, Terragrunt, CDK, CloudFormation)
+- IAM roles, policies, and trust relationships
+- Networking configurations (VPC, subnets, security groups)
+- Secrets handling
+- CI/CD pipelines
+- Logging and monitoring signals
+- Backup and recovery patterns
+- Resource tagging and governance
+- EKS-related manifests (if present)
+
+---
+
+## Evaluation Categories
+
+1. **Identity & Access Management** (AC, IA) — IAM roles, least privilege, no wildcards, MFA, no hardcoded creds
+2. **Secrets Management** (IA, SC) — Secrets Manager/SSM, no plaintext, KMS
+3. **Logging & Audit** (AU) — CloudTrail, retention, audit visibility
+4. **Network Security** (SC) — Minimal public exposure, no 0.0.0.0/0 without justification, private subnets
+5. **Data Protection** (SC, CP) — Encryption, backup, data classification
+6. **Vulnerability Management** (SI) — Dependency/container scanning, patch process
+7. **DevSecOps Pipeline** — CI/CD, security scanning, IaC, minimal manual deploy
+8. **Zero Trust Alignment** — Identity-based access, segmentation, no implicit trust
+9. **Tagging & Governance** — Project, Environment, Owner, CostCenter, ManagedBy, Purpose, DataClassification, Lifecycle
+10. **Resilience & Recovery** (CP) — Multi-AZ, backup/restore, failover
+
+---
+
+## Scoring
+
+Each category scored 0–10:
+
+| Score | Meaning |
+|-------|---------|
+| 9–10 | Compliant |
+| 7–8 | Minor gaps |
+| 5–6 | Moderate risk |
+| 3–4 | High risk |
+| 0–2 | Critical failure |
+
+Findings must include:
+- **severity** — critical / high / medium / low
+- **confidence** — high / medium / low
+- **evidence_type** — observed / inferred / missing / contradictory
+
+---
+
+## Frameworks Aligned To
+
+| Framework | Scope |
+|-----------|-------|
+| **AWS Well-Architected** | 6 pillars |
+| **NIST SP 800-53** | Control families AC, IA, AU, SC, CM, SI, CP, IR |
+| **FedRAMP** | Cloud security expectations |
+| **DoD DevSecOps** | Pipeline security, scanning, IaC |
+| **DoD Zero Trust** | Identity-based access; least privilege |
+| **FinOps** | Tagging; cost attribution |
+
+---
+
+## Output Requirements
+
+1. Executive Summary
+2. Category Score Table
+3. Critical Failures
+4. High-Risk Findings
+5. Compliance Gaps (NIST mapped)
+6. Remediation Plan
+7. Production Readiness Verdict: NOT READY / CONDITIONAL / READY
+
+---
+
+## Rules
+
+- Be strict and evidence-based
+- Do not assume controls exist
+- Flag missing evidence explicitly
+- Prioritize security over cost
+- Treat secrets exposure, wildcard IAM, and public data exposure as critical
+- Treat missing tags as governance failure
+
+---
+
+## Limitations
+
+| Limitation | Explanation |
+|------------|-------------|
+| **Cannot prove runtime configuration** | Repo analysis cannot confirm what is actually running in AWS |
+| **Cannot prove account settings** | CloudTrail, MFA, SCPs may be configured outside the repo |
+| **Missing evidence** | When evidence is absent, the skill labels it explicitly and may raise risk |
+| **Inference vs observation** | Inferred conclusions are labeled; only observed facts are treated as confirmed |

@@ -1,118 +1,165 @@
 # Governance Hooks Specification
 
-Pre-push quality gate hooks for the federal platform pack. Defines what to check, when, and how to classify results.
+Pre-push quality gate hooks for the federal platform pack. Defines what to check, when, and how to classify results. The system acts as if it runs before a developer should push major changes.
 
 ---
 
 ## Overview
 
-Governance hooks run before a developer should push major changes. They evaluate staged or recent changes against quality criteria and produce a verdict: **pass**, **pass with warnings**, or **fail**.
+Governance hooks evaluate staged or recent changes against quality criteria and produce a verdict: **pass**, **pass with warnings**, or **fail**.
+
+**Integration:** Invoked via `/quality-gate` command or when user asks "ready to push?" See `docs/quality-gate-workflow.md` for workflow. Output format: `schemas/quality-gate.schema.json`.
 
 ---
 
-## Check Categories
+## Trigger File Patterns
 
-### 1. Tests
+Use these patterns to determine which checks apply. Inspect `git diff --staged` or `git diff` for changed paths.
 
-| Check | Trigger | Block | Warn | Info |
-|-------|---------|-------|------|------|
-| Tests added/updated for new code paths | New or modified `*.py`, `*.js`, `*.ts`, `*.go`, `*.java`, etc. | — | ✓ | — |
-| Test config present | Repo has test framework; new code has no tests | — | ✓ | — |
-| Tests run in CI | Pipeline runs tests; tests not in pipeline | — | ✓ | — |
-
-**Block condition:** None. Tests are a warning; blocking would be too strict for incremental work.
-
-**Warn condition:** New production code added without corresponding test changes.
+| Check Category | Trigger Paths / Patterns |
+|----------------|--------------------------|
+| **Tests** | `*.py`, `*.js`, `*.ts`, `*.tsx`, `*.go`, `*.java`, `*.rs`, `*.rb`, `*.php`, `*.cs` (exclude `*_test.*`, `*.test.*`, `*.spec.*`) |
+| **Documentation** | API code, `config/*`, `*.yaml`, `*.yml`, build scripts, deploy manifests, `Dockerfile`, `docker-compose*` |
+| **Security** | `package.json`, `go.mod`, `requirements.txt`, `Cargo.toml`, `Pipfile`, `.github/`, `.gitlab-ci.yml`, `Jenkinsfile`, `Dockerfile`, `docker-compose*`, `*.tf`, `*.bicep`, `cloudformation/`, `cdk/` |
+| **Architecture** | `*.tf`, `*.bicep`, `cloudformation/`, `cdk/`, `helm/`, `kustomize/`, `manifests/`, `deployments/`, `argocd/`, `flux/` |
+| **Changelog** | API changes, config schema changes, breaking changes, `package.json` version, release tags |
+| **Ownership/Tagging** | `aws_*`, `azurerm_*`, `google_*` in IaC; `*.tf`, `*.bicep`, `cloudformation/` |
+| **Evidence strength** | Agent review output; recommendations; findings |
 
 ---
 
-### 2. Documentation
+## Check Categories: Block / Warn / Info
 
-| Check | Trigger | Block | Warn | Info |
-|-------|---------|-------|------|------|
-| Docs updated for meaningful change | API, config, deploy, or architecture change | ✓ | — | — |
-| README reflects current setup | Build/deploy/run steps changed | ✓ | — | — |
-| Runbooks updated for ops changes | Deployment or operational procedure changed | — | ✓ | — |
-| Architecture doc updated | Infrastructure or deployment model changed | — | ✓ | — |
+### 1. Tests (Added or Updated)
 
-**Block condition:** Meaningful code, config, or deployment change without corresponding doc update (README, runbook, or architecture doc).
+| Finding | Classification | Condition |
+|---------|----------------|-----------|
+| New production code without test changes | **Warn** | Triggered: new/modified prod code. No corresponding `*_test.*`, `*.test.*`, `*.spec.*` change. |
+| Test framework present but new code has no tests | **Warn** | Repo has pytest, jest, go test, etc.; new code path untested. |
+| CI does not run tests | **Warn** | Pipeline exists; no test step. |
+| Tests added/updated for new code | **Pass** | No finding. |
 
-**Warn condition:** Architecture or runbook change without doc update.
+**Blocks push?** No.  
+**Warns?** Yes when new code lacks tests.
+
+---
+
+### 2. Documentation Updates
+
+| Finding | Classification | Condition |
+|---------|----------------|-----------|
+| API/config/deploy change without doc update | **Block** | Meaningful change to API, config, build, or deploy; no README, runbook, or architecture doc update. |
+| Build or run steps changed without README update | **Block** | Build/deploy/run instructions changed; README not updated. |
+| Architecture or deployment model changed without doc | **Warn** | Infrastructure or deployment model change; no ADR or architecture doc. |
+| Runbook not updated for ops change | **Warn** | Ops procedure changed; runbook not updated. |
+| Docs updated with change | **Pass** | No finding. |
+
+**Blocks push?** Yes for meaningful code/config/deploy changes without doc update.  
+**Warns?** Yes for architecture/runbook gaps.
 
 ---
 
 ### 3. Security Review Triggers
 
-| Check | Trigger | Block | Warn | Info |
-|-------|---------|-------|------|------|
-| Dependency change | `package.json`, `go.mod`, `requirements.txt`, `Cargo.toml`, etc. | ✓* | — | — |
-| CI/CD change | `.github/`, `.gitlab/`, `Jenkinsfile`, etc. | ✓* | — | — |
-| Container change | `Dockerfile`, `docker-compose`, container config | ✓* | — | — |
-| IaC change | `*.tf`, `*.bicep`, `cloudformation/`, etc. | ✓* | — | — |
-| Plaintext secrets | Any file with secrets, keys, passwords | ✓ | — | — |
-| `:latest` in production | Image tag in prod config | ✓ | — | — |
-| Disabled TLS or permissive IAM | Config weakening security | ✓ | — | — |
+| Finding | Classification | Condition |
+|---------|----------------|-----------|
+| Plaintext secrets in code/config | **Block** | Secrets, keys, passwords in code, config, or pipeline. |
+| `:latest` or unversioned ref in production | **Block** | Image or artifact ref uses `:latest` or unversioned in prod path. |
+| Disabled TLS or overly permissive IAM | **Block** | Config weakens security (TLS off, `*` in IAM). |
+| Dependency/CI/container/IaC change without security review | **Block** | Change to deps, CI, container, or IaC; no scan, attestation, or review. |
+| Dependency change without lock file | **Block** | package.json, go.mod, etc. changed; lock file absent or not updated. |
+| Security review completed; no issues | **Pass** | No finding. |
 
-**Block condition:** *Security review required for dependency/CI/container/IaC changes. Block if: plaintext secrets, `:latest` in prod, disabled TLS, overly permissive IAM. For other changes, block if security review was not performed (e.g., no scan, no attestation).
-
-**Warn condition:** Security review triggered but not yet completed; defer to human.
+**Blocks push?** Yes for all block conditions.  
+**Warns?** No (security is block or pass).
 
 ---
 
 ### 4. Architecture Note Triggers
 
-| Check | Trigger | Block | Warn | Info |
-|-------|---------|-------|------|------|
-| Infrastructure change | New/modified IaC, new cloud resources | — | ✓ | — |
-| Deployment model change | New deploy path, new environment, new orchestration | — | ✓ | — |
-| ADR or architecture doc | Significant architectural decision | — | ✓ | — |
+| Finding | Classification | Condition |
+|---------|----------------|-----------|
+| New IaC or cloud resources without architecture note | **Warn** | New/modified IaC or cloud resources; no ADR or architecture doc. |
+| Deployment model changed without doc | **Warn** | New env, new orchestration, new deploy path; no architecture doc. |
+| Architecture doc or ADR present | **Pass** | No finding. |
 
-**Block condition:** None. Architecture notes are a warning.
-
-**Warn condition:** Infrastructure or deployment model change without ADR or architecture doc update.
+**Blocks push?** No.  
+**Warns?** Yes when infrastructure or deployment model changes without doc.
 
 ---
 
-### 5. Changelog
+### 5. Changelog Expectations
 
-| Check | Trigger | Block | Warn | Info |
-|-------|---------|-------|------|------|
-| Changelog updated for behavior change | API change, config change, breaking change | — | ✓ | — |
-| Version bump for release | Release tag or version file | — | ✓ | — |
+| Finding | Classification | Condition |
+|---------|----------------|-----------|
+| Behavior change without CHANGELOG entry | **Warn** | API, config, or behavior materially changed; no CHANGELOG update. |
+| Release/version bump without CHANGELOG | **Warn** | Version bumped or release tagged; no CHANGELOG entry. |
+| CHANGELOG updated | **Pass** | No finding. |
 
-**Block condition:** None. Changelog is a warning.
-
-**Warn condition:** Material behavior change without CHANGELOG entry.
+**Blocks push?** No.  
+**Warns?** Yes when behavior materially changes without changelog.
 
 ---
 
 ### 6. Ownership and Tagging (Cloud)
 
-| Check | Trigger | Block | Warn | Info |
-|-------|---------|-------|------|------|
-| Tags on new cloud resources | New `aws_*`, `azurerm_*`, `google_*` in IaC | — | ✓ | — |
-| Environment, Owner, CostCenter | Required tags missing | — | ✓ | — |
-| Untagged production resources | Prod path without tags | — | ✓ | — |
+| Finding | Classification | Condition |
+|---------|----------------|-----------|
+| New cloud resources without tags | **Warn** | New `aws_*`, `azurerm_*`, `google_*` resources; missing environment, owner, cost center. |
+| Production resources missing required tags | **Warn** | Prod path; tags incomplete. |
+| Tags present and complete | **Pass** | No finding. |
 
-**Block condition:** None. Tagging is a warning for incremental work.
-
-**Warn condition:** New cloud resources without environment, owner, cost center tags.
+**Blocks push?** No.  
+**Warns?** Yes when cloud resources lack tags.
 
 ---
 
 ### 7. Evidence Strength
 
-| Check | Trigger | Block | Warn | Info |
-|-------|---------|-------|------|------|
-| Recommendations cite evidence | Agent producing review or assessment | ✓ | — | — |
-| No unverified claims | Findings without file/config reference | ✓ | — | — |
-| Missing evidence called out | Review output | — | — | ✓ |
+| Finding | Classification | Condition |
+|---------|----------------|-----------|
+| Recommendation without evidence | **Block** | Agent output contains recommendation without file/config/line citation. |
+| Unverified claim presented as fact | **Block** | Claim without evidence; not labeled "evidence not found." |
+| Missing evidence explicitly called out | **Info** | Good practice; no action. |
+| All findings cite evidence | **Pass** | No finding. |
 
-**Block condition:** Review or assessment output contains recommendations without observable evidence. (Applies when agent is in review mode.)
+**Blocks push?** Yes when agent output has recommendations without evidence.  
+**Warns?** No.  
+**Info?** Yes when missing evidence is explicitly called out.
 
-**Warn condition:** — 
+---
 
-**Info condition:** Missing evidence explicitly called out in output.
+## What Blocks Push Readiness
+
+| Category | Block Condition |
+|----------|-----------------|
+| Documentation | Meaningful code/config/deploy change without doc update |
+| Security | Plaintext secrets; `:latest` in prod; disabled TLS; permissive IAM |
+| Security | Dependency/CI/container/IaC change without security review |
+| Security | Dependency change without lock file |
+| Evidence | Recommendation without evidence; unverified claim as fact |
+
+---
+
+## What Only Warns
+
+| Category | Warn Condition |
+|----------|----------------|
+| Tests | New code without tests; CI not running tests |
+| Documentation | Architecture/runbook change without doc |
+| Architecture | New IaC or deployment model change without ADR |
+| Changelog | Behavior change without CHANGELOG |
+| Ownership/Tagging | Cloud resources without tags |
+
+---
+
+## What Is Informational
+
+| Category | Info Condition |
+|----------|----------------|
+| Evidence | Missing evidence explicitly called out in output |
+| General | Best-practice reminders; non-critical observations |
+| General | Suggestions for improvement |
 
 ---
 
@@ -120,9 +167,9 @@ Governance hooks run before a developer should push major changes. They evaluate
 
 | Verdict | Condition |
 |---------|-----------|
-| **fail** | Any block condition is true |
-| **pass with warnings** | No block conditions; one or more warn conditions |
-| **pass** | No block conditions; no warn conditions (info only or clean) |
+| **fail** | One or more **block** findings |
+| **pass with warnings** | No block findings; one or more **warn** findings |
+| **pass** | No block findings; no warn findings (info only or clean) |
 
 ---
 
@@ -130,15 +177,14 @@ Governance hooks run before a developer should push major changes. They evaluate
 
 | Hook | When | Action |
 |------|------|--------|
-| Pre-push | User asks "ready to push?" or runs `/quality-gate` | Run full check set |
-| File edit | `write` or `edit` on trigger paths | Update internal state |
-| Session idle | Session completes | Log warnings if any |
+| Pre-push | User asks "ready to push?" or runs `/quality-gate` | Run full check set; output verdict and findings |
+| File edit | `write` or `edit` on trigger paths | Internal state; may surface reminder |
+| Session idle | Session completes | Log warnings if any; do not block |
 
 ---
 
-## Implementation Notes
+## References
 
-- Hooks are implemented as plugins (`.opencode/plugins/*.js`) or invoked via `/quality-gate` command.
-- Block conditions are enforced; fail verdict blocks push recommendation.
-- Warn conditions are reported; pass with warnings allows push but surfaces items to address.
-- Informational items are logged but do not affect verdict.
+- `docs/quality-gate-workflow.md` — Full workflow and check details
+- `schemas/quality-gate.schema.json` — Output format
+- `rules/no-push-without-verification.md` — Verification checklist

@@ -18,13 +18,13 @@
 |-----------|----------|---------|
 | Config | `.opencode/opencode.json` | Agents, commands, instructions |
 | Commands | `.opencode/commands/` | 6 commands: repo-assess, solution-discovery, platform-design, federal-checklist, gitops-audit, quality-gate |
-| Instructions | `.opencode/instructions/` | core-engineering, platform-review-standards, governance-rules |
+| Instructions | `.opencode/instructions/` | core-engineering, repo/arch/federal standards, documentation-rules, cloud-governance-rules, gitops-governance-rules |
 | Agent prompts | `.opencode/prompts/agents/` | 6 agents |
 | Plugins | `.opencode/plugins/` | Pre-merge quality, supply-chain guard, governance-hooks |
-| Skills | `skills/` | repo-review, federal-platform-review, gitops-maturity, aws/azure/gcp-platform-review |
+| Skills | `skills/` | well-architected-review, federal-platform-review, gitops-capability-audit, nist-compliance-evaluator, aws-federal-grade-checklist, aws/azure/gcp-platform-review |
 | Rules | `rules/` | 5 rules: evidence, push verification, docs, security, tagging |
 | Contexts | `contexts/` | repo-review-context, solution-discovery-question-bank |
-| Schemas | `schemas/` | review-report, compliance-report, quality-gate |
+| Schemas | `schemas/` | review-report, compliance-report, quality-gate, well-architected-score |
 
 ## Command → Agent Mapping
 

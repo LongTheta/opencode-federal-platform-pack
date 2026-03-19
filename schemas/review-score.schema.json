@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://opencode-federal-platform-pack/schemas/review-score.schema.json",
+  "title": "OpenCode Review Score",
+  "description": "Universal architecture scoring model for repository, service, platform, or cloud environment. Inspired by AWS Well-Architected; generalized for any target.",
+  "type": "object",
+  "required": ["review_target", "summary", "categories", "findings"],
+  "properties": {
+    "review_target": {
+      "type": "object",
+      "required": ["name", "type", "scope"],
+      "properties": {
+        "name": { "type": "string", "description": "Name of the reviewed target" },
+        "type": {
+          "type": "string",
+          "enum": ["repository", "service", "platform", "architecture"],
+          "description": "Type of review target"
+        },
+        "scope": { "type": "string", "description": "Scope or path (e.g., repo path, service name)" },
+        "review_date": { "type": "string", "format": "date-time", "description": "When the review was performed" }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["final_score", "letter_grade", "confidence", "production_readiness"],
+      "properties": {
+        "final_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Weighted overall score 0–10"
+        },
+        "letter_grade": {
+          "type": "string",
+          "enum": ["A", "B", "C", "D", "F"],
+          "description": "A: 9.0–10, B: 8.0–8.9, C: 7.0–7.9, D: 5.5–6.9, F: <5.5"
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["high", "medium", "low"],
+          "description": "Assessment confidence based on evidence quality"
+        },
+        "production_readiness": {
+          "type": "string",
+          "enum": ["ready", "conditionally_ready", "not_ready"],
+          "description": "ready: no critical. conditionally_ready: high-risk. not_ready: critical."
+        }
+      }
+    },
+    "categories": {
+      "type": "object",
+      "required": ["security", "reliability", "performance", "cost_awareness", "operational_excellence"],
+      "properties": {
+        "security": { "$ref": "#/definitions/category" },
+        "reliability": { "$ref": "#/definitions/category" },
+        "performance": { "$ref": "#/definitions/category" },
+        "cost_awareness": { "$ref": "#/definitions/category" },
+        "operational_excellence": { "$ref": "#/definitions/category" }
+      }
+    },
+    "findings": {
+      "type": "object",
+      "required": ["critical", "high", "medium", "low", "informational"],
+      "properties": {
+        "critical": { "type": "array", "items": { "$ref": "#/definitions/finding" } },
+        "high": { "type": "array", "items": { "$ref": "#/definitions/finding" } },
+        "medium": { "type": "array", "items": { "$ref": "#/definitions/finding" } },
+        "low": { "type": "array", "items": { "$ref": "#/definitions/finding" } },
+        "informational": { "type": "array", "items": { "$ref": "#/definitions/finding" } }
+      }
+    },
+    "top_priorities": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/priority" }
+    }
+  },
+  "definitions": {
+    "category": {
+      "type": "object",
+      "required": ["score", "weight", "rationale"],
+      "properties": {
+        "score": { "type": "number", "minimum": 0, "maximum": 10 },
+        "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+        "rationale": { "type": "string" },
+        "evidence_found": { "type": "array", "items": { "type": "string" } },
+        "missing_evidence": { "type": "array", "items": { "type": "string" } },
+        "risks": { "type": "array", "items": { "type": "string" } },
+        "recommended_actions": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "required": ["title", "severity"],
+      "properties": {
+        "title": { "type": "string" },
+        "severity": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low", "informational"]
+        },
+        "evidence": { "type": "string" },
+        "recommendation": { "type": "string" }
+      }
+    },
+    "priority": {
+      "type": "object",
+      "required": ["priority", "title", "reason", "severity"],
+      "properties": {
+        "priority": { "type": "integer", "minimum": 1 },
+        "title": { "type": "string" },
+        "reason": { "type": "string" },
+        "severity": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low"]
+        },
+        "owner_hint": { "type": "string" }
+      }
+    }
+  }
+}

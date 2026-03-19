@@ -165,6 +165,35 @@ Use for repo reviews and architecture discovery. Assess each domain and document
 
 ---
 
+## Questions a Solution Architect Should Ask
+
+| Domain | Sample Questions |
+|--------|------------------|
+| **Resilience** | What is the blast radius of a single AZ failure? Multi-AZ for RDS, EKS, ALB? What is RTO/RPO? Has restore been tested? |
+| **Identity** | How are IAM roles scoped? Any `*` in policies? Who can assume the deploy role? OIDC for CI/CD? |
+| **Secrets** | Where do secrets live? Secrets Manager, Parameter Store, or env vars? Where is the RDS master password? |
+| **Network** | Public vs. private subnets? VPC endpoints for S3, ECR? Any 0.0.0.0/0 in production? VPC Flow Logs? |
+| **Cost** | Tags on all billable resources? Cost alerts or budgets? |
+| **CI/CD** | Terraform plan in CI? Drift detection? Pinned image digests? No `:latest` in prod? |
+
+---
+
+## Evidence to Request or Look For
+
+| Category | Artifacts |
+|----------|-----------|
+| **IaC** | `terraform/`, `cloudformation/`, `cdk/` — `*.tf`, `*.yaml`, `cdk.json` |
+| **Identity** | `aws_iam_role`, `aws_iam_role_policy`, `oidc_provider` |
+| **Network** | `aws_vpc`, `aws_subnet`, `aws_security_group`, `aws_vpc_endpoint`, `aws_flow_log` |
+| **Workloads** | EKS cluster/node group, Lambda config, RDS instance, `multi_az` |
+| **Secrets** | `aws_secretsmanager_secret`, `aws_ssm_parameter`, `aws_kms_key` — no keys in config |
+| **Observability** | `aws_cloudwatch_log_group`, `retention_in_days`, `aws_cloudwatch_metric_alarm` |
+| **Governance** | `tags` block (Environment, Owner, CostCenter), `aws_budgets_budget`, Config rules |
+| **CI/CD** | `.github/workflows/`, `terraform plan`, OIDC, ECR digest (not `:latest`) |
+| **Docs** | `README.md`, `docs/`, `docs/runbooks/`, `docs/adr/` |
+
+---
+
 ## Readiness Score (Per Domain)
 
 | Domain | Score (1–5) | Notes |

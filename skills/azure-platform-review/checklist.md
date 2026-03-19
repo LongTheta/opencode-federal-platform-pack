@@ -165,6 +165,35 @@ Use for repo reviews and architecture discovery. Assess each domain and document
 
 ---
 
+## Questions a Solution Architect Should Ask
+
+| Domain | Sample Questions |
+|--------|------------------|
+| **Resilience** | What is the blast radius of a single region failure? Geo-redundancy for SQL, Storage? What is RTO/RPO? Has restore been tested? |
+| **Identity** | How are managed identities used? Any service principals with client secrets? OIDC for CI/CD? |
+| **Secrets** | Where do secrets live? Key Vault with managed identity? Where is the SQL connection string? |
+| **Network** | Private endpoints for Storage, Key Vault, SQL? Any 0.0.0.0/0 in NSGs? VNet integration for App Service? |
+| **Cost** | Tags on all billable resources? Budget alerts? |
+| **CI/CD** | Terraform plan or Bicep what-if in CI? OIDC or federated credentials? Drift detection? Pinned image digests? |
+
+---
+
+## Evidence to Request or Look For
+
+| Category | Artifacts |
+|----------|-----------|
+| **IaC** | `terraform/`, `bicep/`, `arm/` — `*.tf`, `*.bicep`, `*.json` |
+| **Identity** | `azurerm_user_assigned_identity`, `identity` blocks, `azurerm_role_assignment` |
+| **Network** | `azurerm_virtual_network`, `azurerm_subnet`, `azurerm_network_security_group`, `azurerm_private_endpoint` |
+| **Workloads** | AKS cluster/node pools, App Service, Function App configs |
+| **Secrets** | `azurerm_key_vault`, `azurerm_key_vault_access_policy`, `@Microsoft.KeyVault(...)` — no plaintext |
+| **Observability** | `azurerm_log_analytics_workspace`, `azurerm_monitor_diagnostic_setting`, `azurerm_application_insights` |
+| **Governance** | `tags` block (Environment, Owner, CostCenter), `azurerm_consumption_budget`, Azure Policy |
+| **CI/CD** | `.github/workflows/`, `azure-pipelines.yml`, `azure/login` with OIDC, ACR digest |
+| **Docs** | `README.md`, `docs/`, `docs/runbooks/`, `docs/adr/` |
+
+---
+
 ## Readiness Score (Per Domain)
 
 | Domain | Score (1–5) | Notes |

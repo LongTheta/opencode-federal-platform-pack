@@ -1,19 +1,19 @@
 # Quality Gate Workflow
 
-Pre-push quality gate for the federal platform pack. Defines what to check, when, and how to classify results.
+Pre-push quality gate for the federal platform pack. The system acts as if it runs before a developer should push major changes. Defines what to check, when, and how to classify results.
 
 ---
 
 ## Purpose
 
-Act as if the gate runs before a developer should push major changes. Surface blockers, warnings, and informational items so the developer can address them before push.
+Surface blockers, warnings, and informational items so the developer can address them before push. Produce a verdict: **pass**, **pass with warnings**, or **fail**.
 
 ---
 
 ## Workflow Steps
 
-1. **Gather changed files** — Staged or recent changes (git diff, or workspace context).
-2. **Classify changes** — Map changes to trigger categories (tests, docs, security, arch, changelog, cloud, evidence).
+1. **Gather changed files** — Staged or recent changes (`git diff --staged`, `git diff`, or workspace context).
+2. **Classify changes** — Map changes to trigger categories using file patterns (see `.opencode/plugins/governance-hooks.md`).
 3. **Run checks** — For each triggered category, evaluate against criteria.
 4. **Classify findings** — Block vs. Warn vs. Informational.
 5. **Compute verdict** — Pass | Pass with warnings | Fail.
@@ -25,7 +25,7 @@ Act as if the gate runs before a developer should push major changes. Surface bl
 
 ### 1. Tests (Added or Updated)
 
-**Trigger:** New or modified production code (`*.py`, `*.js`, `*.ts`, `*.go`, `*.java`, `*.rs`, etc.).
+**Trigger:** New or modified production code (`*.py`, `*.js`, `*.ts`, `*.go`, `*.java`, `*.rs`, etc.) — exclude test files.
 
 | Finding | Classification | Action |
 |---------|----------------|--------|
@@ -34,11 +34,12 @@ Act as if the gate runs before a developer should push major changes. Surface bl
 | CI does not run tests | **Warn** | Recommend adding test step to pipeline |
 | Tests added/updated for new code | **Pass** | No finding |
 
-**Block?** No. Tests are a warning.
+**Block?** No. Tests are a warning.  
+**Warn?** Yes when new production code lacks corresponding test changes.
 
 ---
 
-### 2. Documentation
+### 2. Documentation Updates
 
 **Trigger:** Meaningful change to API, config, build, deploy, or architecture.
 
@@ -50,13 +51,16 @@ Act as if the gate runs before a developer should push major changes. Surface bl
 | Runbook not updated for ops change | **Warn** | Recommend runbook update |
 | Docs updated with change | **Pass** | No finding |
 
-**Block?** Yes for meaningful code/config/deploy changes without doc update.
+**Block?** Yes for meaningful code/config/deploy changes without doc update.  
+**Warn?** Yes for architecture or runbook gaps.
 
 ---
 
 ### 3. Security Review Triggers
 
 **Trigger:** Change to dependencies, CI/CD, containers, or IaC.
+
+**Trigger paths:** `package.json`, `go.mod`, `requirements.txt`, `Cargo.toml`, `Pipfile`; `.github/`, `.gitlab-ci.yml`, `Jenkinsfile`; `Dockerfile`, `docker-compose*`; `*.tf`, `*.bicep`, `cloudformation/`, `cdk/`.
 
 | Finding | Classification | Action |
 |---------|----------------|--------|
@@ -67,7 +71,8 @@ Act as if the gate runs before a developer should push major changes. Surface bl
 | Dependency change without lock file | **Block** | Require lock file (package-lock.json, go.sum, etc.) |
 | Security review completed; no issues | **Pass** | No finding |
 
-**Block?** Yes for security-critical issues and for dependency/CI/container/IaC changes without review.
+**Block?** Yes for all security-critical issues and for dependency/CI/container/IaC changes without review.  
+**Warn?** No.
 
 ---
 
@@ -75,17 +80,20 @@ Act as if the gate runs before a developer should push major changes. Surface bl
 
 **Trigger:** Infrastructure or deployment model change.
 
+**Trigger paths:** `*.tf`, `*.bicep`, `cloudformation/`, `cdk/`, `helm/`, `kustomize/`, `manifests/`, `deployments/`, `argocd/`, `flux/`.
+
 | Finding | Classification | Action |
 |---------|----------------|--------|
 | New IaC or cloud resources without architecture note | **Warn** | Recommend ADR or architecture doc update |
 | Deployment model changed (new env, new orchestration) | **Warn** | Recommend architecture doc |
 | Architecture doc or ADR present | **Pass** | No finding |
 
-**Block?** No. Architecture notes are a warning.
+**Block?** No. Architecture notes are a warning.  
+**Warn?** Yes when infrastructure or deployment model changes without doc.
 
 ---
 
-### 5. Changelog
+### 5. Changelog Expectations
 
 **Trigger:** Material behavior change (API, config, breaking change).
 
@@ -95,13 +103,14 @@ Act as if the gate runs before a developer should push major changes. Surface bl
 | Release/version bump without CHANGELOG | **Warn** | Recommend CHANGELOG for release |
 | CHANGELOG updated | **Pass** | No finding |
 
-**Block?** No. Changelog is a warning.
+**Block?** No. Changelog is a warning.  
+**Warn?** Yes when behavior materially changes without changelog.
 
 ---
 
 ### 6. Ownership and Tagging (Cloud)
 
-**Trigger:** Cloud-related IaC changes (`aws_*`, `azurerm_*`, `google_*`).
+**Trigger:** Cloud-related IaC changes (`aws_*`, `azurerm_*`, `google_*` in Terraform, Bicep, CloudFormation).
 
 | Finding | Classification | Action |
 |---------|----------------|--------|
@@ -109,7 +118,8 @@ Act as if the gate runs before a developer should push major changes. Surface bl
 | Production resources missing required tags | **Warn** | Recommend tagging |
 | Tags present and complete | **Pass** | No finding |
 
-**Block?** No. Tagging is a warning.
+**Block?** No. Tagging is a warning.  
+**Warn?** Yes when cloud resources lack tags.
 
 ---
 
@@ -124,7 +134,9 @@ Act as if the gate runs before a developer should push major changes. Surface bl
 | Missing evidence explicitly called out | **Info** | No action; good practice |
 | All findings cite evidence | **Pass** | No finding |
 
-**Block?** Yes when agent output contains recommendations without evidence.
+**Block?** Yes when agent output contains recommendations without evidence.  
+**Warn?** No.  
+**Info?** Yes when missing evidence is explicitly called out.
 
 ---
 
@@ -183,3 +195,10 @@ Act as if the gate runs before a developer should push major changes. Surface bl
 ## Output Schema
 
 See `schemas/quality-gate.schema.json` for the structured output format.
+
+---
+
+## References
+
+- `.opencode/plugins/governance-hooks.md` — Trigger patterns and block/warn/info matrix
+- `rules/no-push-without-verification.md` — Verification checklist

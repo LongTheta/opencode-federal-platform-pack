@@ -1,6 +1,7 @@
 ---
 name: gcp-platform-review
 description: GCP platform and repository review for identity, network, workload isolation, secrets, observability, labeling, cost, resilience, CI/CD, policy, and documentation. Use for repo reviews and architecture discovery.
+risk_tier: 0
 ---
 
 # GCP Platform Review Skill
@@ -40,28 +41,76 @@ Assesses GCP-based platforms and repositories for production readiness and opera
 
 ## Questions a Solution Architect Should Ask
 
+**Resilience and blast radius**
 - What is the blast radius of a single zone failure? Multi-zone or multi-region?
-- How are service accounts scoped? Any project-level broad roles?
+- Are GKE and Cloud SQL multi-zone? What happens if us-central1-a fails?
+- What is the RTO/RPO? Has backup restore been tested?
+
+**Identity and access**
+- How are service accounts scoped? Any project-level broad roles (owner, editor)?
+- Workload Identity for GKE? Workload Identity Federation for CI/CD?
+- No JSON key files in code or config?
+
+**Secrets and data**
 - Where do secrets live? Secret Manager with workload identity?
-- What is the network segmentation? Private Google Access? VPC-SC?
+- Where is the Cloud SQL password? Secret Manager or variable?
+
+**Network**
+- What is the network segmentation? Private Google Access? VPC Service Controls?
+- Any 0.0.0.0/0 ingress in production? IAP for SSH?
+
+**Cost and governance**
 - How is cost allocated? Labels on all billable resources?
-- What is the RTO/RPO? Backup and restore tested?
+- Budget alerts? Right-sized machine types?
+
+**CI/CD and drift**
 - How does CI/CD authenticate? Workload Identity Federation? No keys?
-- Is there drift detection? Terraform plan in CI? Organization Policy?
+- Terraform plan in CI? Organization Policy?
+- Pinned image digests? No `:latest` in prod?
 
 ## Evidence to Request or Look For
 
-- Terraform in `terraform/`, `infra/` with `google_*` provider
-- `google_service_account`, `google_project_iam_*` definitions
-- `google_compute_network`, `google_compute_firewall`
-- GKE cluster config, Cloud Run service configs
-- Secret Manager references (not secret values)
-- Cloud Logging sinks, metric filters, alerting policies
-- `labels` on `google_*` resources
-- Backup config (Cloud SQL, GCS versioning)
-- `cloudbuild.yaml`, `.github/workflows/` for CI/CD
-- Organization Policy or Terraform Validator
-- `docs/`, `README.md`, runbooks
+**IaC and structure**
+- Terraform in `terraform/`, `infra/` with `google` provider
+- `*.tf` with `google_*` resources
+
+**Identity**
+- `google_service_account`, `google_project_iam_*`
+- `workload_identity_config` on GKE node pool
+- `google_iam_workload_identity_pool_provider` for CI/CD
+
+**Network**
+- `google_compute_network`, `google_compute_subnetwork`, `google_compute_firewall`
+- `private_ip_google_access = true`
+- `google_access_context_manager_*` (VPC-SC, if applicable)
+
+**Workloads**
+- GKE: `google_container_cluster`, `google_container_node_pool`
+- Cloud Run: `google_cloud_run_service`
+- Cloud SQL: `google_sql_database_instance`
+
+**Secrets**
+- `google_secret_manager_secret`, `google_secret_manager_secret_version`
+- IAM binding to service account — no user keys
+- No `*.json` key files in repo
+
+**Observability**
+- `google_logging_project_sink`, `google_logging_log_bucket`
+- `google_monitoring_alert_policy`, `google_monitoring_uptime_check_config`
+- `retention_in_days` on log bucket
+
+**Governance**
+- `labels` on `google_*` resources: environment, owner, cost-center
+- `google_billing_budget` (if in repo)
+- `google_org_policy_policy`, Terraform Validator
+
+**CI/CD**
+- `cloudbuild.yaml`, `.github/workflows/`
+- `google-github-actions/auth` with Workload Identity Federation
+- Artifact Registry references with digest, not `:latest`
+
+**Documentation**
+- `README.md`, `docs/`, `docs/runbooks/`, `docs/adr/`
 
 ## Output Format
 

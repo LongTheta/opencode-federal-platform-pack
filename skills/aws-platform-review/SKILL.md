@@ -1,6 +1,7 @@
 ---
 name: aws-platform-review
 description: AWS platform and repository review for identity, network, workload isolation, secrets, observability, tagging, cost, resilience, CI/CD, policy, and documentation. Use for repo reviews and architecture discovery.
+risk_tier: 0
 ---
 
 # AWS Platform Review Skill
@@ -40,28 +41,76 @@ Assesses AWS-based platforms and repositories for production readiness and opera
 
 ## Questions a Solution Architect Should Ask
 
+**Resilience and blast radius**
 - What is the blast radius of a single AZ failure? Multi-AZ or multi-region?
+- Are RDS, EKS, and ALB multi-AZ? What happens if us-east-1a fails?
+- What is the RTO/RPO? Has backup restore been tested?
+
+**Identity and access**
 - How are IAM roles scoped? Any `*` in policies?
+- Who can assume the deploy role? Is it scoped to the repo?
+- OIDC for GitHub Actions/GitLab? No long-lived access keys?
+
+**Secrets and data**
 - Where do secrets live? Secrets Manager, Parameter Store, or env vars?
-- What is the network segmentation? Public vs. private subnets? VPC endpoints?
+- Where is the RDS master password? KMS keys for encryption?
+
+**Network**
+- What is the network segmentation? Public vs. private subnets?
+- VPC endpoints for S3, ECR, SSM? Any 0.0.0.0/0 in production?
+- Do we have VPC Flow Logs? Where do they go?
+
+**Cost and governance**
 - How is cost allocated? Tags on all billable resources?
-- What is the RTO/RPO? Backup and restore tested?
-- How does CI/CD deploy? OIDC for GitHub Actions? No long-lived keys?
-- Is there drift detection? Terraform plan in CI? Config rules?
+- Cost alerts or budgets? Right-sizing signals?
+
+**CI/CD and drift**
+- How does CI/CD deploy? Terraform plan in CI?
+- Is there drift detection? AWS Config rules?
+- Pinned image digests? No `:latest` in prod?
 
 ## Evidence to Request or Look For
 
+**IaC and structure**
 - Terraform/CloudFormation/CDK in `terraform/`, `cloudformation/`, `cdk/`
-- IAM role definitions, policy documents
-- VPC, subnet, security group configs
-- EKS node groups, Lambda configs, RDS instances
-- Secrets Manager or Parameter Store references (not values)
-- CloudWatch log groups, metric filters, alarms
-- Cost allocation tags in IaC
-- Backup config (RDS automated backups, S3 versioning)
-- `.github/workflows/` or equivalent for CI/CD
-- AWS Config rules, SCPs, or OPA policies
-- `docs/`, `README.md`, runbooks
+- `*.tf`, `*.yaml`, `cdk.json`
+
+**Identity**
+- `aws_iam_role`, `aws_iam_role_policy`, `aws_iam_policy`
+- `oidc_provider`, `AssumeRoleWithWebIdentity` in trust policy
+
+**Network**
+- `aws_vpc`, `aws_subnet`, `aws_security_group`, `aws_network_acl`
+- `aws_vpc_endpoint` for S3, ECR, SSM, etc.
+- `aws_flow_log`
+
+**Workloads**
+- EKS: `aws_eks_cluster`, `aws_eks_node_group`, `kubernetes_*`
+- Lambda: `aws_lambda_function`, `vpc_config`
+- RDS: `aws_db_instance`, `multi_az`, `backup_retention_period`
+
+**Secrets**
+- `aws_secretsmanager_secret`, `aws_ssm_parameter`
+- `aws_kms_key`, `kms_key_id` on resources
+- No `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` in config
+
+**Observability**
+- `aws_cloudwatch_log_group`, `retention_in_days`
+- `aws_cloudwatch_metric_alarm`
+- GuardDuty, Config (if present)
+
+**Governance**
+- `tags` block on `aws_*` resources: Environment, Owner, CostCenter
+- `aws_budgets_budget` (if in repo)
+- `aws_config_config_rule`, OPA/Checkov in pipeline
+
+**CI/CD**
+- `.github/workflows/`, `.gitlab-ci.yml`, `Jenkinsfile`
+- `terraform plan` step, OIDC auth
+- ECR references with digest, not `:latest`
+
+**Documentation**
+- `README.md`, `docs/`, `docs/runbooks/`, `docs/adr/`
 
 ## Output Format
 

@@ -1,8 +1,14 @@
 # Docs Required for Meaningful Change
 
+## MUST / MUST NOT
+
+- **MUST** include doc update specification when proposing meaningful change.
+- **MUST** output `[DOC UPDATE REQUIRED]` when user proposes change without doc update.
+- **MUST NOT** approve or implement meaningful changes without doc update specification.
+
 ## Rule
 
-Meaningful code, architecture, or deployment changes require corresponding documentation updates.
+Meaningful code, architecture, or deployment changes REQUIRE corresponding documentation updates.
 
 ## Meaningful Change (Definition)
 

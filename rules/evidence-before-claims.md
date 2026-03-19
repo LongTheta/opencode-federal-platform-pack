@@ -1,8 +1,15 @@
 # Evidence Before Claims
 
+## MUST / MUST NOT
+
+- **MUST** cite file path, line range, config, or manifest for every claim.
+- **MUST** output `[EVIDENCE MISSING]` when evidence cannot be verified.
+- **MUST NOT** use "likely," "may," "typically," or "you should consider" without repo-specific evidence.
+- **MUST NOT** report severity for unverified items; use "Evidence not found."
+
 ## Rule
 
-Every recommendation, finding, or claim must be supported by observed evidence. Missing evidence must be called out explicitly.
+Every recommendation, finding, or claim MUST be supported by observed evidence. Missing evidence MUST be called out explicitly.
 
 ## Requirements
 

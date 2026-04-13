@@ -1,6 +1,6 @@
 # OpenCode Federal Platform Pack — Agent Instructions
 
-Cross-tool agent guidance for repository review, platform design, federal compliance, and DevSecOps maturity. Read by Claude Code, Cursor, OpenCode, and Codex.
+Cross-tool agent guidance for repository review, platform design, federal compliance, and DevSecOps maturity. Read by Claude Code, OpenCode, Codex, and similar agents.
 
 ## Mission
 

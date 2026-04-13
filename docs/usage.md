@@ -50,7 +50,7 @@ Invoke with `@`:
 
 ## Skills
 
-Reference from commands or Cursor:
+Reference from commands or your editor:
 
 - `skills/well-architected-review/` — Universal platform review (Security, Reliability, Performance, Cost, Operations)
 - `skills/federal-platform-review/` — Federal checklist

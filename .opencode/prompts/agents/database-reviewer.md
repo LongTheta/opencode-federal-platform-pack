@@ -160,14 +160,14 @@ LEFT JOIN orders o ON o.user_id = u.id
 WHERE u.active = true;
 ```
 
-### 2. Cursor-Based Pagination
+### 2. Keyset pagination
 **Impact:** Consistent O(1) performance regardless of page depth
 
 ```sql
 -- BAD: OFFSET gets slower with depth
 SELECT * FROM products ORDER BY id LIMIT 20 OFFSET 199980;
 
--- GOOD: Cursor-based (always fast)
+-- GOOD: Keyset / seek on indexed column (always fast)
 SELECT * FROM products WHERE id > 199980 ORDER BY id LIMIT 20;
 ```
 

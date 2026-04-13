@@ -1,17 +1,17 @@
 # Migration Guide
 
-Moving from another OpenCode pack, Cursor rules, or a custom setup to the federal platform pack.
+Moving from another OpenCode pack, standalone project rules, or a custom setup to the federal platform pack.
 
 ---
 
-## From Cursor-Only Setup
+## From editor-only setup (no OpenCode)
 
-If you use Cursor with `.cursor/rules/` and no OpenCode:
+If you use project AI rules under `.agent/rules/` (or similar) and no OpenCode:
 
 1. **Install OpenCode** (if not already): [opencode.ai](https://opencode.ai)
 2. **Copy the pack** into your project or set `OPENCODE_CONFIG_DIR` to the pack root.
-3. **Keep Cursor rules** — This pack includes `.cursor/rules/federal-platform-pack.mdc` for Cursor. You can use both: OpenCode for commands/agents, Cursor rules for IDE hints.
-4. **Commands** — OpenCode commands (`/repo-assess`, `/quality-gate`) run in OpenCode. In Cursor, use the same concepts via `@` mentions or paste the command templates into chat.
+3. **Optional rules** — You can keep editor-local rules for IDE hints while using OpenCode for commands and agents; paths and formats depend on your environment.
+4. **Commands** — OpenCode commands (`/repo-assess`, `/quality-gate`) run in OpenCode. In other tools, use the same concepts via mentions or by pasting command templates into chat.
 
 ---
 
@@ -34,7 +34,7 @@ If you use a generic AI coding assistant with no pack:
 
 1. **Start with Option B (Run in Repo)** — Clone this pack, run OpenCode from it. Easiest way to try everything.
 2. **Or Option A (Plugin Only)** — Copy `federal-platform-enforcement.js` into `.opencode/plugins/` of your project. You get enforcement without commands.
-3. **Add Cursor rule** — Copy `.cursor/rules/federal-platform-pack.mdc` into your project for Cursor-specific guidance.
+3. **Optional project rule** — Add a project rule file under `.agent/rules/` (or your editor’s convention) if you want local guidance alongside OpenCode.
 
 ---
 

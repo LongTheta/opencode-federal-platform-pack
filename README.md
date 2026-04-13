@@ -152,7 +152,7 @@ skills/              well-architected-review, federal-platform-review, gitops-ca
 schemas/             review-score, quality-gate, compliance-report
 contexts/            solution-discovery question bank, federal-compliance-criteria
 docs/                Architecture, usage, scoring, enforcement
-.cursor/rules/       Cursor IDE rules
+.agent/rules/        Optional project AI rules (if used)
 ```
 
 ---
@@ -201,7 +201,7 @@ CI (`.gitlab-ci.yml`): lint, npm audit, verify, tests, schema validation. Kaniko
 
 ## Inspiration & How We Differ from Everything Claude Code
 
-This pack was inspired by [Everything Claude Code](https://github.com/affaan-m/everything-claude-code) (ECC)—the agent harness performance optimization system for Claude Code, Codex, OpenCode, and Cursor.
+This pack was inspired by [Everything Claude Code](https://github.com/affaan-m/everything-claude-code) (ECC)—the agent harness performance optimization system for Claude Code, Codex, OpenCode, and similar AI coding agents.
 
 | Aspect | Everything Claude Code | This pack |
 |--------|------------------------|-----------|
@@ -211,7 +211,7 @@ This pack was inspired by [Everything Claude Code](https://github.com/affaan-m/e
 | **Output** | Free-form; varies by command | Structured JSON only (review-score, quality-gate, compliance-report schemas) |
 | **Compliance** | General security (OWASP, AgentShield) | FedRAMP, FISMA, NIST 800-53, DoD ZT, DoD DevSecOps—readiness mapping, no certification claims |
 | **Evidence** | Not required | Required—file/config citations; missing evidence flagged |
-| **Primary harness** | Claude Code (with Cursor, Codex, OpenCode support) | OpenCode-first (with Cursor rules) |
+| **Primary harness** | Claude Code (with Codex, OpenCode, and related clients) | OpenCode-first (optional project AI rules) |
 
 **Use ECC when:** You need broad development workflows, multi-language support, and harness optimization. **Use this pack when:** You need federal compliance mapping, GitOps maturity audits, platform architecture reviews, or evidence-based readiness assessments for government/DoD work.
 

@@ -104,7 +104,7 @@ After installation:
 Skills are in `skills/`. Each has `SKILL.md`, checklist, output-template. Use without full pack:
 
 1. Copy the skill directory (e.g., `skills/well-architected-review/`) into your project.
-2. Reference from Cursor rules, custom prompts, or OpenCode commands: "Use skills/well-architected-review."
+2. Reference from project AI rules, custom prompts, or OpenCode commands: "Use skills/well-architected-review."
 3. Ensure `schemas/review-score.schema.json` is available if producing structured output.
 
 Skills do not require the full `.opencode/` catalog. They are documentation + templates.

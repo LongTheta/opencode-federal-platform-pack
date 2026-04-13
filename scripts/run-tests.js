@@ -6,6 +6,8 @@
  *   integration - federal-control-mapper, federal-checklist-pipeline (execSync on fixtures)
  *   evidence   - evidence-extractor (walks repo, slowest)
  * Fixes glob expansion on Linux CI where npm doesn't use a shell.
+ * Uses --test-timeout (default 10m per subtest, override NODE_TEST_TIMEOUT_MS) and
+ * --test-force-exit so the process cannot hang for hours after tests finish.
  */
 
 const fs = require("fs");
@@ -33,7 +35,16 @@ if (groupArg && GROUPS[groupArg]) {
     .sort();
 }
 
-const result = spawnSync(process.execPath, ["--test", ...files], {
+/** Per-test timeout (ms). Prevents a stuck subtest from running unbounded. */
+const testTimeoutMs = process.env.NODE_TEST_TIMEOUT_MS || "600000";
+const nodeArgs = [
+  "--test",
+  `--test-timeout=${testTimeoutMs}`,
+  "--test-force-exit",
+  ...files,
+];
+
+const result = spawnSync(process.execPath, nodeArgs, {
   stdio: "inherit",
   cwd: path.resolve(__dirname, ".."),
 });

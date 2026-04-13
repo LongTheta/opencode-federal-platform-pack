@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "server",
+  "dolt_database": "opencode_federal_platform_pack",
+  "project_id": "8db66546-cca5-4bcd-b9c9-234c7546208f"
+}

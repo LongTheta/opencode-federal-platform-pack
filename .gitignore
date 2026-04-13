@@ -23,3 +23,8 @@ build/
 _ecc_temp/
 *.log
 .cache/
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
